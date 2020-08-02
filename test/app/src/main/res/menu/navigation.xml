@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android">
+    <item
+        android:id="@+id/menubutton"
+        android:enabled="true"
+        android:icon="@drawable/menu"
+        android:title="Menu"></item>
+    <item
+        android:id="@+id/gallerybutton"
+        android:enabled="true"
+        android:icon="@drawable/frame"
+        android:title="Gallery"></item>
+    <item
+        android:id="@+id/homebutton"
+        android:enabled="true"
+        android:icon="@drawable/home"
+        android:title="Home"></item>
+    <item
+        android:id="@+id/communitybutton"
+        android:enabled="true"
+        android:icon="@drawable/community"
+        android:title="Community"></item>
+    <item
+        android:id="@+id/settingbutton"
+        android:enabled="true"
+        android:icon="@drawable/account"
+        android:title="Settings"></item>
+</menu>
