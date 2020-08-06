@@ -3,16 +3,20 @@ package com.example.test.Dialog;
 import android.app.DatePickerDialog;
 import android.app.Dialog;
 import android.content.Context;
+import android.content.Intent;
 import android.os.Build;
+import android.provider.MediaStore;
 import android.view.View;
 import android.view.Window;
 import android.widget.Button;
 import android.widget.DatePicker;
 import android.widget.EditText;
+import android.widget.ImageButton;
 import android.widget.Toast;
 
 import androidx.annotation.RequiresApi;
 
+import com.example.test.MainActivity;
 import com.example.test.Model.Folder;
 import com.example.test.R;
 
@@ -25,6 +29,7 @@ public class AddDialog implements View.OnClickListener {
     private EditText nameText, placeText, withText;
     private Button startDateButton, endDateButton;
     private Button addButton, cancelButton;
+    private ImageButton addImageButton;
     private LocalDate startDate;
     private LocalDate endDate;
     private DatePickerDialog.OnDateSetListener startDateSetListener;
@@ -42,28 +47,37 @@ public class AddDialog implements View.OnClickListener {
         dialog.requestWindowFeature(Window.FEATURE_NO_TITLE);//타이틀 바 숨김
         dialog.setContentView(R.layout.add_dialog);
         dialog.show();
+        initializeWidget();
+        setOnClickListener();
+    }
+    @RequiresApi(api = Build.VERSION_CODES.O)
+    public void initializeWidget()
+    {
+        addImageButton=(ImageButton)dialog.findViewById(R.id.addImageButton);
         nameText=(EditText)dialog.findViewById(R.id.nameText);
         placeText=(EditText)dialog.findViewById(R.id.placeText);
         withText=(EditText)dialog.findViewById(R.id.withText);
         startDateButton=(Button)dialog.findViewById(R.id.startDate);
-        startDateButton.setOnClickListener(this);
         endDateButton=(Button)dialog.findViewById(R.id.endDate);
-        endDateButton.setOnClickListener(this);
         addButton=(Button)dialog.findViewById(R.id.addButton);
-        addButton.setOnClickListener(this);
         cancelButton=(Button)dialog.findViewById(R.id.cancelButton);
-        cancelButton.setOnClickListener(this);
         startDate= LocalDate.now();
         endDate=LocalDate.now();
         startDateButton.setText(startDate.format(DateTimeFormatter.ISO_DATE));
         endDateButton.setText(endDate.format(DateTimeFormatter.ISO_DATE));
     }
-
+    public void setOnClickListener()
+    {
+        addImageButton.setOnClickListener(this);
+        startDateButton.setOnClickListener(this);
+        endDateButton.setOnClickListener(this);
+        addButton.setOnClickListener(this);
+        cancelButton.setOnClickListener(this);
+    }
     public void setAddDialogListener(AddDialogListener addDialogListener)
     {
         this.addDialogListener=addDialogListener;
     }
-
     @RequiresApi(api = Build.VERSION_CODES.O)
     @Override
     public void onClick(View view) {
@@ -142,6 +156,19 @@ public class AddDialog implements View.OnClickListener {
                 Toast.makeText(context, "사진첩이 추가되었습니다.", Toast.LENGTH_SHORT).show();
                 dialog.dismiss();
                 break;
+            case R.id.addImageButton:
+                getPicturesFromAlbum();
+                break;
+
         }
     }
+
+    private void getPicturesFromAlbum() {
+        Intent intent=new Intent(Intent.ACTION_PICK);
+        intent.setType(MediaStore.Images.Media.CONTENT_TYPE);
+        intent.putExtra(Intent.EXTRA_ALLOW_MULTIPLE, true);
+        intent.setData(MediaStore.Images.Media.EXTERNAL_CONTENT_URI);
+        ((MainActivity)context).startActivityForResult(intent, 1);
+    }
 }
+//com.example.test.MainActivity@af4314a
