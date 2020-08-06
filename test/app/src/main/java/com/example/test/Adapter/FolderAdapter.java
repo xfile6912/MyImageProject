@@ -58,5 +58,8 @@ public class FolderAdapter extends BaseAdapter {
         withText.setText(folders.get(position).getWithDescription());
         return view;
     }
+    public void setFolders(ArrayList<Folder> folders){
+        this.folders=folders;
+    }
 }
 
