@@ -7,7 +7,6 @@ import android.database.SQLException;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
 import android.os.Build;
-import android.provider.BaseColumns;
 
 import androidx.annotation.RequiresApi;
 
@@ -58,7 +57,7 @@ public class FolderDBHelper {
         mDB.close();
     }
     @RequiresApi(api = Build.VERSION_CODES.O)
-    public long insertColumn(Folder folder){
+    public long insertRecord(Folder folder){
         ContentValues values = new ContentValues();
         values.put(FolderDB.CreateDB.NAME, folder.getName());
         values.put(FolderDB.CreateDB.PLACE, folder.getPlace());
@@ -66,6 +65,21 @@ public class FolderDBHelper {
         values.put(FolderDB.CreateDB.ENDDATE, folder.getEndDate().format(DateTimeFormatter.ISO_DATE));
         values.put(FolderDB.CreateDB.WITHDESCRIPTION, folder.getWithDescription());
         return mDB.insert(FolderDB.CreateDB._TABLENAME0, null, values);
+    }
+    public int deleteRecord(Folder folder)//성공시 삭제한 수 1리턴
+    {
+        return mDB.delete(FolderDB.CreateDB._TABLENAME0, "name=?", new String[]{folder.getName()});
+    }
+    @RequiresApi(api = Build.VERSION_CODES.O)//성공시 삭제한 수 1리턴
+    public int updateRecord(Folder folder, String lastName)
+    {
+        ContentValues values = new ContentValues();
+        values.put(FolderDB.CreateDB.NAME, folder.getName());
+        values.put(FolderDB.CreateDB.PLACE, folder.getPlace());
+        values.put(FolderDB.CreateDB.STARTDATE, folder.getStartDate().format(DateTimeFormatter.ISO_DATE));
+        values.put(FolderDB.CreateDB.ENDDATE, folder.getEndDate().format(DateTimeFormatter.ISO_DATE));
+        values.put(FolderDB.CreateDB.WITHDESCRIPTION, folder.getWithDescription());
+        return mDB.update(FolderDB.CreateDB._TABLENAME0, values, "name=?", new String[] {lastName});
     }
     public Cursor findByFolder(Folder folder) {
         String sql="";

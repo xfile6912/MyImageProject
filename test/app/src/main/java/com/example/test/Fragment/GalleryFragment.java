@@ -1,17 +1,13 @@
 package com.example.test.Fragment;
 
-import android.app.Dialog;
 import android.database.Cursor;
 import android.os.Build;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.Button;
 import android.widget.ImageButton;
 import android.widget.ListView;
-import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -21,16 +17,18 @@ import androidx.fragment.app.Fragment;
 import com.example.test.Adapter.FolderAdapter;
 import com.example.test.DB.FolderDB;
 import com.example.test.DB.FolderDBHelper;
+import com.example.test.DB.ImageDBHelper;
 import com.example.test.Dialog.AddDialog;
 import com.example.test.Dialog.AddDialogListener;
 import com.example.test.Dialog.SearchDialog;
 import com.example.test.Dialog.SearchDialogListener;
-import com.example.test.MainActivity;
 import com.example.test.Model.Folder;
 import com.example.test.R;
 
 import java.time.LocalDate;
 import java.util.ArrayList;
+import java.util.Iterator;
+import java.util.TreeSet;
 
 public class GalleryFragment extends Fragment implements View.OnClickListener {
     ViewGroup viewGroup;
@@ -38,7 +36,9 @@ public class GalleryFragment extends Fragment implements View.OnClickListener {
     ImageButton addButton;
     FolderAdapter folderAdapter;
     FolderDBHelper folderDBHelper;
+    ImageDBHelper imageDBHelper;
     ListView listView;
+    TreeSet images;
     @RequiresApi(api = Build.VERSION_CODES.O)
     @Nullable
     @Override
@@ -53,10 +53,14 @@ public class GalleryFragment extends Fragment implements View.OnClickListener {
         return viewGroup;
     }
     @RequiresApi(api = Build.VERSION_CODES.O)
-    public void setViewGroup(){
+    public void setViewGroup(){//초기 설정.
         folderDBHelper=new FolderDBHelper(getContext());
         folderDBHelper.open();
         folderDBHelper.create();
+        imageDBHelper=new ImageDBHelper(getContext());
+        imageDBHelper.open();
+        imageDBHelper.create();
+        images=new TreeSet();
         ArrayList<Folder> folders=getFolders();
         listView = (ListView)viewGroup.findViewById(R.id.listView);
         folderAdapter=new FolderAdapter(getActivity(), folders);
@@ -88,11 +92,20 @@ public class GalleryFragment extends Fragment implements View.OnClickListener {
                 AddDialog addDialog=new AddDialog(getActivity());
                 addDialog.setAddDialogListener(new AddDialogListener() {
                     @Override
-                    public void onPositiveClicked(Folder folder) {
-                        folderDBHelper.insertColumn(folder);
-                        ArrayList<Folder> folders=getFolders();
-                        folderAdapter.setFolders(folders);
-                        listView.setAdapter(folderAdapter);
+                    public long onPositiveClicked(Folder folder) {
+                        long check=folderDBHelper.insertRecord(folder);
+                        if(check!=-1)
+                        {
+                            Iterator<String> ir = images.iterator();
+                            while (ir.hasNext()) {
+                                imageDBHelper.insertColumn(folder, ir.next());
+                            }
+                            images = new TreeSet();//데이터 베이스에 추가하고 나서 images 초기화.
+                            ArrayList<Folder> folders = getFolders();
+                            folderAdapter.setFolders(folders);
+                            listView.setAdapter(folderAdapter);
+                        }
+                        return check;
                     }
 
                     @Override
@@ -106,6 +119,7 @@ public class GalleryFragment extends Fragment implements View.OnClickListener {
     @Override
     public void onDestroy() {
         folderDBHelper.close();//db helper 삭제
+        imageDBHelper.close();
         super.onDestroy();
     }
     @RequiresApi(api = Build.VERSION_CODES.O)
@@ -143,5 +157,9 @@ public class GalleryFragment extends Fragment implements View.OnClickListener {
         }
         cursor.close();
         return folders;
+    }
+
+    public void setImages(TreeSet images) {
+        this.images=images;
     }
 }

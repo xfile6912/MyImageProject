@@ -18,7 +18,7 @@ import com.example.test.Fragment.MenuFragment;
 import com.example.test.Fragment.SettingFragment;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 
-import java.util.ArrayList;
+import java.util.TreeSet;
 
 public class MainActivity extends AppCompatActivity {
     BottomNavigationView bottomNavigationView;
@@ -27,6 +27,7 @@ public class MainActivity extends AppCompatActivity {
     HomeFragment homeFragment;
     MenuFragment menuFragment;
     SettingFragment settingFragment;
+    TreeSet imageList;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -39,7 +40,7 @@ public class MainActivity extends AppCompatActivity {
     @Override
     protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
-
+        imageList=new TreeSet();
         if(requestCode==1) {
             if (data == null) {
 
@@ -48,15 +49,17 @@ public class MainActivity extends AppCompatActivity {
                     Toast.makeText(this, "다중선택이 불가합니다.", Toast.LENGTH_SHORT).show();
                 else {
                     ClipData clipData = data.getClipData();
-                    ArrayList imageList=new ArrayList();
+
                     Log.i("clipdata", String.valueOf(clipData.getItemCount()));
                     for(int i=0; i<clipData.getItemCount();i++)
                     {
                         imageList.add(String.valueOf(clipData.getItemAt(i).getUri()));
                     }
+
                 }
             }
         }
+        galleryFragment.setImages(imageList);
     }
 
     private void setFragment()
