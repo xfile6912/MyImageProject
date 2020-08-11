@@ -28,7 +28,6 @@ public class UserRepositoryTest extends StudyApplicationTests {
         User user=new User();
         user.setAccount(account);
         user.setPassword(password);
-        user.setStatus(status);
         user.setEmail(email);
         user.setPhoneNumber(phoneNumber);
         user.setRegisteredAt(registeredAt);

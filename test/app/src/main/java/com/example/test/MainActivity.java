@@ -1,5 +1,6 @@
 package com.example.test;
 
+import android.Manifest;
 import android.content.ClipData;
 import android.content.Intent;
 import android.os.Bundle;
@@ -10,6 +11,7 @@ import android.widget.Toast;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.fragment.app.Fragment;
 
 import com.example.test.Fragment.CommunityFragment;
 import com.example.test.Fragment.GalleryFragment;
@@ -17,7 +19,10 @@ import com.example.test.Fragment.HomeFragment;
 import com.example.test.Fragment.MenuFragment;
 import com.example.test.Fragment.SettingFragment;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
+import com.gun0912.tedpermission.PermissionListener;
+import com.gun0912.tedpermission.TedPermission;
 
+import java.util.ArrayList;
 import java.util.TreeSet;
 
 public class MainActivity extends AppCompatActivity {
@@ -27,20 +32,44 @@ public class MainActivity extends AppCompatActivity {
     HomeFragment homeFragment;
     MenuFragment menuFragment;
     SettingFragment settingFragment;
-    TreeSet imageList;
+    ArrayList imageList;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
         bottomNavigationView=findViewById(R.id.bottom_nav);
         setFragment();
+        PermissionListener permissionlistener = new PermissionListener() {
+            @Override
+            public void onPermissionGranted() {
+                Toast.makeText(MainActivity.this, "Permission Granted", Toast.LENGTH_SHORT).show();
+
+                // 허락을 한 경우 실행할 부분
+
+            }
+
+            @Override
+            public void onPermissionDenied(ArrayList<String> deniedPermissions) {
+                Toast.makeText(MainActivity.this, "권한이 없습니다.\n" + deniedPermissions.toString(), Toast.LENGTH_SHORT).show();
+
+
+                // 거절을 한 경우 실행할 부분
+
+
+            }
+        };
+        TedPermission.with(MainActivity.this)
+                .setPermissionListener(permissionlistener)
+                .setDeniedMessage("If you reject permission,you can not use this service\n\nPlease turn on permissions at [Setting] > [Permission]")
+                .setPermissions(Manifest.permission.READ_EXTERNAL_STORAGE, Manifest.permission.WRITE_EXTERNAL_STORAGE)
+                .check();
         System.out.println("activity="+this.toString());
     }
 
     @Override
     protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
-        imageList=new TreeSet();
+        imageList=new ArrayList();
         if(requestCode==1) {
             if (data == null) {
 
@@ -81,48 +110,40 @@ public class MainActivity extends AppCompatActivity {
                 {
                     case R.id.communitybutton:
                     {
-                        getSupportFragmentManager()
-                                .beginTransaction()
-                                .replace(R.id.main_layout,communityFragment)
-                                .commitAllowingStateLoss();
+                        replaceFragment(communityFragment);
                         return true;
                     }
 
                     case R.id.gallerybutton:
                     {
-                        getSupportFragmentManager()
-                                .beginTransaction()
-                                .replace(R.id.main_layout,galleryFragment)
-                                .commitAllowingStateLoss();
+                        replaceFragment(galleryFragment);
                         return true;
                     }
                     case R.id.homebutton:
                     {
-                        getSupportFragmentManager()
-                                .beginTransaction()
-                                .replace(R.id.main_layout,homeFragment)
-                                .commitAllowingStateLoss();
+                        replaceFragment(homeFragment);
                         return true;
                     }
                     case R.id.menubutton:
                     {
-                        getSupportFragmentManager()
-                                .beginTransaction()
-                                .replace(R.id.main_layout,menuFragment)
-                                .commitAllowingStateLoss();
+                        replaceFragment(menuFragment);
                         return true;
                     }
                     case R.id.settingbutton:
                     {
-                        getSupportFragmentManager()
-                                .beginTransaction()
-                                .replace(R.id.main_layout,settingFragment)
-                                .commitAllowingStateLoss();
+                        replaceFragment(settingFragment);
                         return true;
                     }
                     default: return false;
                 }
             }
         });
+    }
+    public void replaceFragment(Fragment fragment)
+    {
+        getSupportFragmentManager()
+                .beginTransaction()
+                .replace(R.id.main_layout,fragment)
+                .commitAllowingStateLoss();
     }
 }

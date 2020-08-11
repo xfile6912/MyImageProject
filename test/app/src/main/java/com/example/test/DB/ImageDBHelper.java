@@ -64,7 +64,7 @@ public class ImageDBHelper {
     public Cursor findByFolder(Folder folder) {
         String sql="";
         sql = "select * from " + ImageDB.CreateDB._TABLENAME0
-                + " where " + ImageDB.CreateDB.FOLDERNAME + "=" + folder.getName();
+                + " where " + ImageDB.CreateDB.FOLDERNAME + "='" + folder.getName()+"'";
         Cursor cursor = mDB.rawQuery(sql,null);
 
         return cursor;

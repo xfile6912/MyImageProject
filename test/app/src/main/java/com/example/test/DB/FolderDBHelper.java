@@ -124,8 +124,5 @@ public class FolderDBHelper {
         Cursor cursor = mDB.rawQuery(sql,null);
 
         return cursor;
-
-
-
     }
 }

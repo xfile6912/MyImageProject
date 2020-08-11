@@ -8,10 +8,14 @@ import com.example.study.model.network.Header;
 import com.example.study.model.network.request.UserApiRequest;
 import com.example.study.model.network.response.UserApiResponse;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
+import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 @Service
 public class UserApiLogicService implements CrudInterface<UserApiRequest, UserApiResponse> {
@@ -32,13 +36,15 @@ public class UserApiLogicService implements CrudInterface<UserApiRequest, UserAp
 
         User newUser=userRepository.save(user);
 
-        return response(user);
+        return Header.OK(response(user));
     }
 
     @Override
     public Header<UserApiResponse> read(Long id) {
         //id->repository getOne, getById;
-        return userRepository.findById(id).map(user->response(user)).orElseGet(()->Header.ERROR("데이터 없음"));
+        return userRepository.findById(id).map(user->response(user))
+                .map(userApiResponse -> Header.OK(userApiResponse))
+                .orElseGet(()->Header.ERROR("데이터 없음"));
     }
 
     @Override
@@ -56,7 +62,8 @@ public class UserApiLogicService implements CrudInterface<UserApiRequest, UserAp
             return user;
         })
                 .map(user->userRepository.save(user))//update -> new User
-                .map(user->response(user))//update된 유저
+                .map(user->response(user))
+                .map(userApiResponse -> Header.OK(userApiResponse))//update된 유저
                 .orElseGet(()-> Header.ERROR("데이터없음"));
     }
 
@@ -68,7 +75,7 @@ public class UserApiLogicService implements CrudInterface<UserApiRequest, UserAp
             return Header.OK();})
                 .orElseGet(()->Header.ERROR("데이터없음"));
     }
-    private Header<UserApiResponse> response(User user)
+    private UserApiResponse response(User user)
     {
         UserApiResponse userApiResponse=UserApiResponse.builder()
                 .id(user.getId())
@@ -81,7 +88,15 @@ public class UserApiLogicService implements CrudInterface<UserApiRequest, UserAp
                 .unregisteredAt(user.getUnregisteredAt())
                 .build();
         //Header + data
-        return Header.OK(userApiResponse);
+        return userApiResponse;
+    }
+
+    public Header<List<UserApiResponse>> search(Pageable pageable) {
+        Page<User> users=userRepository.findAll(pageable);
+        List<UserApiResponse> userApiResponseList=users.stream()
+                .map(user->response(user))
+                .collect(Collectors.toList());
+        return Header.OK(userApiResponseList);
     }
     //1.request data;
     //2. user생성

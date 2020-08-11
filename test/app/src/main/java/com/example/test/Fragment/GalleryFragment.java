@@ -6,6 +6,7 @@ import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.AdapterView;
 import android.widget.ImageButton;
 import android.widget.ListView;
 
@@ -13,6 +14,8 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.annotation.RequiresApi;
 import androidx.fragment.app.Fragment;
+import androidx.fragment.app.FragmentManager;
+import androidx.fragment.app.FragmentTransaction;
 
 import com.example.test.Adapter.FolderAdapter;
 import com.example.test.DB.FolderDB;
@@ -22,6 +25,7 @@ import com.example.test.Dialog.AddDialog;
 import com.example.test.Dialog.AddDialogListener;
 import com.example.test.Dialog.SearchDialog;
 import com.example.test.Dialog.SearchDialogListener;
+import com.example.test.MainActivity;
 import com.example.test.Model.Folder;
 import com.example.test.R;
 
@@ -37,8 +41,9 @@ public class GalleryFragment extends Fragment implements View.OnClickListener {
     FolderAdapter folderAdapter;
     FolderDBHelper folderDBHelper;
     ImageDBHelper imageDBHelper;
+    GalleryFragment2 galleryFragment2;
     ListView listView;
-    TreeSet images;
+    ArrayList images;
     @RequiresApi(api = Build.VERSION_CODES.O)
     @Nullable
     @Override
@@ -50,20 +55,30 @@ public class GalleryFragment extends Fragment implements View.OnClickListener {
         addButton=(ImageButton)viewGroup.findViewById(R.id.addButton);
         searchButton.setOnClickListener(this);
         addButton.setOnClickListener(this);
+        listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            @Override
+            public void onItemClick(AdapterView<?> adapterView, View view, int position, long id) {
+                Folder folder=(Folder)adapterView.getAdapter().getItem(position);
+                galleryFragment2.setFolder(folder);
+                ((MainActivity)getActivity()).replaceFragment(galleryFragment2);
+            }
+        });
         return viewGroup;
     }
     @RequiresApi(api = Build.VERSION_CODES.O)
     public void setViewGroup(){//초기 설정.
+        galleryFragment2=new GalleryFragment2();
         folderDBHelper=new FolderDBHelper(getContext());
         folderDBHelper.open();
         folderDBHelper.create();
         imageDBHelper=new ImageDBHelper(getContext());
         imageDBHelper.open();
         imageDBHelper.create();
-        images=new TreeSet();
+        images=new ArrayList();
         ArrayList<Folder> folders=getFolders();
         listView = (ListView)viewGroup.findViewById(R.id.listView);
-        folderAdapter=new FolderAdapter(getActivity(), folders);
+        folderAdapter=new FolderAdapter(getActivity(), new ArrayList<Folder>());
+        folderAdapter.setFolders(folders);
         listView.setAdapter(folderAdapter);
     }
 
@@ -100,7 +115,7 @@ public class GalleryFragment extends Fragment implements View.OnClickListener {
                             while (ir.hasNext()) {
                                 imageDBHelper.insertColumn(folder, ir.next());
                             }
-                            images = new TreeSet();//데이터 베이스에 추가하고 나서 images 초기화.
+                            images = new ArrayList();//데이터 베이스에 추가하고 나서 images 초기화.
                             ArrayList<Folder> folders = getFolders();
                             folderAdapter.setFolders(folders);
                             listView.setAdapter(folderAdapter);
@@ -159,7 +174,7 @@ public class GalleryFragment extends Fragment implements View.OnClickListener {
         return folders;
     }
 
-    public void setImages(TreeSet images) {
+    public void setImages(ArrayList images) {
         this.images=images;
     }
 }
