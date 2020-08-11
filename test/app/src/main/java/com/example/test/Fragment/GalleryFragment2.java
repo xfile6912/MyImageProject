@@ -1,17 +1,13 @@
 package com.example.test.Fragment;
 
-import android.Manifest;
 import android.database.Cursor;
-import android.media.Image;
 import android.os.Build;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.AdapterView;
 import android.widget.GridView;
-import android.widget.ImageButton;
-import android.widget.ListView;
-import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -21,10 +17,9 @@ import androidx.fragment.app.Fragment;
 import com.example.test.Adapter.ImageAdapter;
 import com.example.test.DB.ImageDB;
 import com.example.test.DB.ImageDBHelper;
+import com.example.test.MainActivity;
 import com.example.test.Model.Folder;
 import com.example.test.R;
-import com.gun0912.tedpermission.PermissionListener;
-import com.gun0912.tedpermission.TedPermission;
 
 import java.util.ArrayList;
 
@@ -35,6 +30,7 @@ public class GalleryFragment2 extends Fragment implements View.OnClickListener {
     ImageDBHelper imageDBHelper;
     ImageAdapter imageAdapter;
     Folder folder;
+    GalleryFragment3 galleryFragment3;
     ArrayList images;
     @RequiresApi(api = Build.VERSION_CODES.O)
     @Nullable
@@ -46,7 +42,7 @@ public class GalleryFragment2 extends Fragment implements View.OnClickListener {
     }
 
     public void setViewGroup(){//초기화코드.
-
+        galleryFragment3=new GalleryFragment3();
         gridView= (GridView)viewGroup.findViewById(R.id.gridView);
         imageDBHelper=new ImageDBHelper(getContext());
         imageDBHelper.open();
@@ -54,6 +50,14 @@ public class GalleryFragment2 extends Fragment implements View.OnClickListener {
         imageAdapter=new ImageAdapter(getActivity(), new ArrayList());
         imageAdapter.setImages(images);
         gridView.setAdapter(imageAdapter);
+        gridView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            @Override
+            public void onItemClick(AdapterView<?> adapterView, View view, int position, long id) {
+                String image= (String) adapterView.getAdapter().getItem(position);
+                galleryFragment3.setImage(image);
+                ((MainActivity)getActivity()).replaceFragment(galleryFragment3);
+            }
+        });
     }
 
     @Override
