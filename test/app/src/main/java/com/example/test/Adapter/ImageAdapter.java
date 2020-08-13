@@ -2,12 +2,6 @@ package com.example.test.Adapter;
 
 import android.content.Context;
 import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
-import android.media.Image;
-import android.media.ThumbnailUtils;
-import android.net.Uri;
-import android.os.Environment;
-import android.provider.MediaStore;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -15,23 +9,25 @@ import android.widget.BaseAdapter;
 import android.widget.GridView;
 import android.widget.ImageView;
 
-import com.example.test.R;
+import androidx.fragment.app.Fragment;
 
-import java.io.FileNotFoundException;
-import java.io.InputStream;
+import com.bumptech.glide.Glide;
+import com.nostra13.universalimageloader.core.ImageLoader;
+
 import java.util.ArrayList;
-import java.util.TreeSet;
 
 public class ImageAdapter extends BaseAdapter {
     Context context=null;
     LayoutInflater layoutInflater=null;
     ArrayList<String> images;
     Bitmap bitmap;
-    public ImageAdapter(Context context, ArrayList images)
+    Fragment fragment;
+    public ImageAdapter(Context context, ArrayList images, Fragment fragment)
     {
         this.context=context;
         this.images=images;
         layoutInflater=LayoutInflater.from(this.context);
+        this.fragment = fragment;
     }
     @Override
     public int getCount() {
@@ -59,17 +55,16 @@ public class ImageAdapter extends BaseAdapter {
         {
             imageView=(ImageView)contentView;
         }
-        try {
-            InputStream inputStream= context.getContentResolver()
-                    .openInputStream(Uri.parse(images.get(position)));
-            bitmap = BitmapFactory.decodeStream(inputStream);
-            Bitmap Thumbnail= ThumbnailUtils.extractThumbnail(bitmap, 300, 300);
+            ImageLoader imageLoader=ImageLoader.getInstance();
+            String uri=images.get(position);
             imageView.setScaleType(ImageView.ScaleType.CENTER_CROP);
             imageView.setLayoutParams(new GridView.LayoutParams(GridView.LayoutParams.MATCH_PARENT, GridView.LayoutParams.MATCH_PARENT));
-            imageView.setImageBitmap(Thumbnail);
-        } catch (FileNotFoundException e) {
-            e.printStackTrace();
-        }
+            Glide.with(fragment)
+                    .load(uri)
+                    .override(300)
+                    .into(imageView);
+
+
 
         return imageView;
     }

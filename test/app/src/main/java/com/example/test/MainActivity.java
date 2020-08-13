@@ -144,4 +144,12 @@ public class MainActivity extends AppCompatActivity {
                 .replace(R.id.main_layout,fragment)
                 .commitAllowingStateLoss();
     }
+    public void replaceFragmentStack(Fragment fragment)
+    {
+        getSupportFragmentManager()
+                .beginTransaction()
+                .replace(R.id.main_layout,fragment)
+                .addToBackStack(null)
+                .commitAllowingStateLoss();
+    }
 }

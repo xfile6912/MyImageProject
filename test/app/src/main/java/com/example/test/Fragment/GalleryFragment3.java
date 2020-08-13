@@ -1,9 +1,6 @@
 package com.example.test.Fragment;
 
 import android.content.Context;
-import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
-import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
 import android.view.LayoutInflater;
@@ -17,11 +14,9 @@ import androidx.annotation.Nullable;
 import androidx.annotation.RequiresApi;
 import androidx.fragment.app.Fragment;
 
+import com.bumptech.glide.Glide;
 import com.example.test.DB.ImageDBHelper;
 import com.example.test.R;
-
-import java.io.FileNotFoundException;
-import java.io.InputStream;
 
 import pl.polidea.view.ZoomView;
 
@@ -55,17 +50,12 @@ public class GalleryFragment3 extends Fragment implements View.OnClickListener {
 
         imageDBHelper=new ImageDBHelper(getContext());
         imageDBHelper.open();
-        InputStream inputStream= null;
-        try {
-            inputStream = getContext().getContentResolver().openInputStream(Uri.parse(image));
-            Bitmap bitmap = BitmapFactory.decodeStream(inputStream);
 
-            imageView.setScaleType(ImageView.ScaleType.FIT_CENTER);
-            imageView.setImageBitmap(bitmap);
-        } catch (FileNotFoundException e) {
-            e.printStackTrace();
-        }
-}
+        imageView.setScaleType(ImageView.ScaleType.FIT_CENTER);
+        Glide.with(this)
+                .load(image)
+                .into(imageView);
+    }
 
     @Override
     public void onClick(View view) {

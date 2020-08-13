@@ -19,6 +19,8 @@ public class ImageDBHelper {
     private DatabaseHelper mDBHelper;
     private Context mCtx;
 
+
+
     private class DatabaseHelper extends SQLiteOpenHelper {
 
         public DatabaseHelper(Context context, String name, SQLiteDatabase.CursorFactory factory, int version) {
@@ -69,7 +71,16 @@ public class ImageDBHelper {
 
         return cursor;
 
-
-
+    }
+    public String findRepImage(Folder folder) {
+        String image=null;
+        String sql="";
+        sql = "select * from " + ImageDB.CreateDB._TABLENAME0
+                + " where " + ImageDB.CreateDB.FOLDERNAME + "='" + folder.getName()+"' LIMIT 1";
+        Cursor cursor = mDB.rawQuery(sql,null);
+        while(cursor.moveToNext()){
+            image=cursor.getString(cursor.getColumnIndex(ImageDB.CreateDB.IMAGEURI));
+        }
+        return image;
     }
 }

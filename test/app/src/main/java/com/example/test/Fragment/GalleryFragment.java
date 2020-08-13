@@ -14,8 +14,6 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.annotation.RequiresApi;
 import androidx.fragment.app.Fragment;
-import androidx.fragment.app.FragmentManager;
-import androidx.fragment.app.FragmentTransaction;
 
 import com.example.test.Adapter.FolderAdapter;
 import com.example.test.DB.FolderDB;
@@ -32,7 +30,6 @@ import com.example.test.R;
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.Iterator;
-import java.util.TreeSet;
 
 public class GalleryFragment extends Fragment implements View.OnClickListener {
     ViewGroup viewGroup;
@@ -60,7 +57,7 @@ public class GalleryFragment extends Fragment implements View.OnClickListener {
             public void onItemClick(AdapterView<?> adapterView, View view, int position, long id) {
                 Folder folder=(Folder)adapterView.getAdapter().getItem(position);
                 galleryFragment2.setFolder(folder);
-                ((MainActivity)getActivity()).replaceFragment(galleryFragment2);
+                ((MainActivity)getActivity()).replaceFragmentStack(galleryFragment2);
             }
         });
         return viewGroup;
@@ -77,7 +74,7 @@ public class GalleryFragment extends Fragment implements View.OnClickListener {
         images=new ArrayList();
         ArrayList<Folder> folders=getFolders();
         listView = (ListView)viewGroup.findViewById(R.id.listView);
-        folderAdapter=new FolderAdapter(getActivity(), new ArrayList<Folder>());
+        folderAdapter=new FolderAdapter(getActivity(), new ArrayList<Folder>(), this);
         folderAdapter.setFolders(folders);
         listView.setAdapter(folderAdapter);
     }

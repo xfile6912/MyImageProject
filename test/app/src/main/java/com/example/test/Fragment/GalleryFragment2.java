@@ -8,6 +8,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.GridView;
+import android.widget.TextView;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -27,6 +28,7 @@ import java.util.ArrayList;
 public class GalleryFragment2 extends Fragment implements View.OnClickListener {
     ViewGroup viewGroup;
     GridView gridView;
+    TextView nameText;
     ImageDBHelper imageDBHelper;
     ImageAdapter imageAdapter;
     Folder folder;
@@ -44,10 +46,12 @@ public class GalleryFragment2 extends Fragment implements View.OnClickListener {
     public void setViewGroup(){//초기화코드.
         galleryFragment3=new GalleryFragment3();
         gridView= (GridView)viewGroup.findViewById(R.id.gridView);
+        nameText=(TextView)viewGroup.findViewById(R.id.nameText);
+        nameText.setText(folder.getPlace());
         imageDBHelper=new ImageDBHelper(getContext());
         imageDBHelper.open();
         images=getImagesByFolder(folder);
-        imageAdapter=new ImageAdapter(getActivity(), new ArrayList());
+        imageAdapter=new ImageAdapter(getActivity(), new ArrayList(), this);
         imageAdapter.setImages(images);
         gridView.setAdapter(imageAdapter);
         gridView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
@@ -55,7 +59,7 @@ public class GalleryFragment2 extends Fragment implements View.OnClickListener {
             public void onItemClick(AdapterView<?> adapterView, View view, int position, long id) {
                 String image= (String) adapterView.getAdapter().getItem(position);
                 galleryFragment3.setImage(image);
-                ((MainActivity)getActivity()).replaceFragment(galleryFragment3);
+                ((MainActivity)getActivity()).replaceFragmentStack(galleryFragment3);
             }
         });
     }

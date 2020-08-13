@@ -18,6 +18,7 @@ public class SplashAcitivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_splash);
+
         splashIcon=(ImageView)findViewById(R.id.splash_icon);
         animation= AnimationUtils.loadAnimation(getApplicationContext(),R.anim.splash_anim);
         splashIcon.startAnimation(animation);
@@ -30,6 +31,7 @@ public class SplashAcitivity extends AppCompatActivity {
             @Override
             public void onAnimationEnd(Animation animation) {
                 startActivity(new Intent(SplashAcitivity.this, MainActivity.class));
+                finish();
             }
 
             @Override

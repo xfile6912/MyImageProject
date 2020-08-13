@@ -6,26 +6,33 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseAdapter;
+import android.widget.ImageView;
 import android.widget.TextView;
 
 import androidx.annotation.RequiresApi;
+import androidx.fragment.app.Fragment;
 
+import com.bumptech.glide.Glide;
+import com.example.test.DB.ImageDBHelper;
 import com.example.test.Model.Folder;
 import com.example.test.R;
 
-import java.text.NumberFormat;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
+
 
 public class FolderAdapter extends BaseAdapter {
     Context context=null;
     LayoutInflater layoutInflater=null;
     ArrayList<Folder> folders;
-    public FolderAdapter(Context context, ArrayList<Folder> folders)
+    ImageDBHelper imageDBHelper;
+    Fragment fragment;
+    public FolderAdapter(Context context, ArrayList<Folder> folders,  Fragment fragment)
     {
         this.context=context;
         this.folders=folders;
         layoutInflater=LayoutInflater.from(this.context);
+        this.fragment=fragment;
     }
     @Override
     public int getCount() {
@@ -46,12 +53,20 @@ public class FolderAdapter extends BaseAdapter {
     @Override
     public View getView(int position, View convertView, ViewGroup parent) {
         View view= layoutInflater.inflate(R.layout.folderlayout, null);
-
+        imageDBHelper=new ImageDBHelper(context);
+        imageDBHelper.open();
+        String image=imageDBHelper.findRepImage(folders.get(position));
+        imageDBHelper.close();
+        ImageView imageView=(ImageView)view.findViewById(R.id.imageView);
         TextView nameText=(TextView)view.findViewById(R.id.nameText);
         TextView placeText=(TextView)view.findViewById(R.id.placeText);
         TextView dateText=(TextView)view.findViewById(R.id.dateText);
         TextView withText=(TextView)view.findViewById(R.id.withText);
         String date=folders.get(position).getStartDate().format(DateTimeFormatter.ISO_DATE)+" ~ "+folders.get(position).getEndDate().format(DateTimeFormatter.ISO_DATE);
+        imageView.setScaleType(ImageView.ScaleType.CENTER_CROP);
+        Glide.with(fragment)
+                .load(image)
+                .into(imageView);
         nameText.setText(folders.get(position).getName());
         placeText.setText(folders.get(position).getPlace());
         dateText.setText(date);
