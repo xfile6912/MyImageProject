@@ -171,10 +171,10 @@ public class AddDialog implements View.OnClickListener {
 
     private void getPicturesFromAlbum() {
         Intent intent=new Intent(Intent.ACTION_PICK);
-        intent.setType(MediaStore.Images.Media.CONTENT_TYPE);
+        intent.setType(android.provider.MediaStore.Images.Media.CONTENT_TYPE);
         intent.putExtra(Intent.EXTRA_ALLOW_MULTIPLE, true);
         intent.setData(MediaStore.Images.Media.EXTERNAL_CONTENT_URI);
-        ((MainActivity)context).startActivityForResult(intent, 1);
+        ((MainActivity)context).startActivityForResult(Intent.createChooser(intent, "Get Album"), 1);
     }
 }
 //com.example.test.MainActivity@af4314a
