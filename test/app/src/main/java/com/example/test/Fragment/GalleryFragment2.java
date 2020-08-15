@@ -57,8 +57,7 @@ public class GalleryFragment2 extends Fragment implements View.OnClickListener {
         gridView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> adapterView, View view, int position, long id) {
-                String image= (String) adapterView.getAdapter().getItem(position);
-                galleryFragment3.setImage(image);
+                galleryFragment3.setImages(images, position);
                 ((MainActivity)getActivity()).replaceFragmentStack(galleryFragment3);
             }
         });

@@ -32,6 +32,8 @@ public class FolderAdapter extends BaseAdapter {
         this.context=context;
         this.folders=folders;
         layoutInflater=LayoutInflater.from(this.context);
+        imageDBHelper=new ImageDBHelper(context);
+        imageDBHelper.open();
         this.fragment=fragment;
     }
     @Override
@@ -53,10 +55,8 @@ public class FolderAdapter extends BaseAdapter {
     @Override
     public View getView(int position, View convertView, ViewGroup parent) {
         View view= layoutInflater.inflate(R.layout.folderlayout, null);
-        imageDBHelper=new ImageDBHelper(context);
-        imageDBHelper.open();
+
         String image=imageDBHelper.findRepImage(folders.get(position));
-        imageDBHelper.close();
         ImageView imageView=(ImageView)view.findViewById(R.id.imageView);
         TextView nameText=(TextView)view.findViewById(R.id.nameText);
         TextView placeText=(TextView)view.findViewById(R.id.placeText);

@@ -13,19 +13,24 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.annotation.RequiresApi;
 import androidx.fragment.app.Fragment;
+import androidx.viewpager.widget.ViewPager;
 
 import com.bumptech.glide.Glide;
+import com.example.test.Adapter.ImagePagerAdapter;
 import com.example.test.DB.ImageDBHelper;
 import com.example.test.R;
+
+import java.util.ArrayList;
 
 import pl.polidea.view.ZoomView;
 
 
 public class GalleryFragment3 extends Fragment implements View.OnClickListener {
     ViewGroup viewGroup;
-    ImageView imageView;
     ImageDBHelper imageDBHelper;
-    String image;
+    ArrayList images;
+    ViewPager imageViewPager;
+    int position;
     @RequiresApi(api = Build.VERSION_CODES.O)
     @Nullable
     @Override
@@ -36,25 +41,10 @@ public class GalleryFragment3 extends Fragment implements View.OnClickListener {
     }
 
     public void setViewGroup(){//초기화코드.
-        View v = ((LayoutInflater) getContext().getSystemService(Context.LAYOUT_INFLATER_SERVICE)).inflate(R.layout.zoom_item, null, false);
-        LinearLayout.LayoutParams layoutParams = new LinearLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT);
-
-        ZoomView zoomView = new ZoomView(getContext());
-        zoomView.addView(v);
-        zoomView.setLayoutParams(layoutParams);
-        zoomView.setMaxZoom(4f); // 줌 Max 배율 설정  1f 로 설정하면 줌 안됩니다.
-
-        LinearLayout container = (LinearLayout) viewGroup.findViewById(R.id.container);
-        container.addView(zoomView);
-        imageView= (ImageView)v.findViewById(R.id.imageView);
-
-        imageDBHelper=new ImageDBHelper(getContext());
-        imageDBHelper.open();
-
-        imageView.setScaleType(ImageView.ScaleType.FIT_CENTER);
-        Glide.with(this)
-                .load(image)
-                .into(imageView);
+        imageViewPager=viewGroup.findViewById(R.id.imageViewPager);
+        imageViewPager.setClipToPadding(false);
+        imageViewPager.setAdapter(new ImagePagerAdapter(getContext(), images));
+        imageViewPager.setCurrentItem(position);
     }
 
     @Override
@@ -62,12 +52,12 @@ public class GalleryFragment3 extends Fragment implements View.OnClickListener {
 
     }
 
-    public void setImage(String image) {
-        this.image = image;
+    public void setImages(ArrayList images, int position) {
+        this.images = images;
+        this.position=position;
     }
     @Override
     public void onDestroy() {
-        imageDBHelper.close();
         super.onDestroy();
     }
 }

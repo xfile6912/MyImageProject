@@ -1,5 +1,7 @@
 package com.example.test.Fragment;
 
+import android.app.AlertDialog;
+import android.content.DialogInterface;
 import android.database.Cursor;
 import android.os.Build;
 import android.os.Bundle;
@@ -9,6 +11,7 @@ import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.ImageButton;
 import android.widget.ListView;
+import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -58,6 +61,31 @@ public class GalleryFragment extends Fragment implements View.OnClickListener {
                 Folder folder=(Folder)adapterView.getAdapter().getItem(position);
                 galleryFragment2.setFolder(folder);
                 ((MainActivity)getActivity()).replaceFragmentStack(galleryFragment2);
+            }
+        });
+        listView.setOnItemLongClickListener(new AdapterView.OnItemLongClickListener() {
+            @Override
+            public boolean onItemLongClick(final AdapterView<?> adapterView, View view, final int position, long id) {
+                final AlertDialog.Builder deleteDialog=new AlertDialog.Builder(getContext());
+                deleteDialog.setTitle("삭제");
+                deleteDialog.setMessage("삭제하시겠습니까?");
+                deleteDialog.setNegativeButton("아니요", new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialogInterface, int i) {
+                    }
+                });
+                deleteDialog.setPositiveButton("예", new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialogInterface, int i) {
+                        Toast.makeText(getActivity(),"삭제되었습니다.", Toast.LENGTH_SHORT).show();
+                        Folder folder=(Folder)adapterView.getAdapter().getItem(position);
+                        folderDBHelper.deleteRecord(folder);
+                        folderAdapter.setFolders(getFolders());
+                        listView.setAdapter(folderAdapter);
+                    }
+                });
+                deleteDialog.show();
+                return true;
             }
         });
         return viewGroup;
@@ -128,6 +156,8 @@ public class GalleryFragment extends Fragment implements View.OnClickListener {
                 break;
         }
     }
+
+
     @Override
     public void onDestroy() {
         folderDBHelper.close();//db helper 삭제

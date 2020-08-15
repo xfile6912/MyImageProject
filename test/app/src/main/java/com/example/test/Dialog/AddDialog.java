@@ -145,6 +145,11 @@ public class AddDialog implements View.OnClickListener {
                 dialog.dismiss();
                 break;
             case R.id.addButton:
+                if(nameText.getText().toString()=="")
+                {
+                    Toast.makeText(context, "폴더이름은 빈칸 일 수 없습니다.", Toast.LENGTH_SHORT).show();
+                    break;
+                }
                 Folder folder= Folder.builder()
                         .name(nameText.getText().toString())
                         .place(placeText.getText().toString())
