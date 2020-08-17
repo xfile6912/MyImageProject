@@ -11,6 +11,6 @@ public final class ImageDB {
                 +FOLDERNAME+" text, "
                 +IMAGEURI+" text, foreign key("
                 +FOLDERNAME+") references "+FolderDB.CreateDB._TABLENAME0+"("+FolderDB.CreateDB.NAME+")"
-                +"on delete cascade, primary key("+ FOLDERNAME+", "+ IMAGEURI+") );";
+                +"on delete cascade on update cascade, primary key("+ FOLDERNAME+", "+ IMAGEURI+") );";
     }
 }

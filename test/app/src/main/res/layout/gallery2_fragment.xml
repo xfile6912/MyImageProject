@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
     android:orientation="vertical"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
@@ -19,11 +20,39 @@
             android:layout_marginStart="10dp"
             android:layout_marginLeft="10dp"
             android:layout_marginTop="0dp"
-            android:text="Gallery"
+            android:text="Place"
             android:textColor="@color/colorPrimary"
             android:textSize="30dp"
             android:textStyle="bold" />
 
+        <ImageButton
+            android:id="@+id/editButton"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentTop="true"
+            android:layout_gravity="center"
+            android:layout_marginTop="5dp"
+            android:layout_marginRight="2dp"
+
+            android:layout_toStartOf="@+id/deleteButton"
+            android:layout_toLeftOf="@+id/deleteButton"
+            android:background="@drawable/buttonbackground"
+            android:src="@drawable/editbutton" />
+
+        <ImageButton
+
+            android:id="@+id/deleteButton"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentTop="true"
+            android:layout_alignParentEnd="true"
+            android:layout_alignParentRight="true"
+            android:layout_gravity="center"
+            android:layout_marginTop="5dp"
+            android:layout_marginEnd="11dp"
+            android:layout_marginRight="11dp"
+            android:background="@drawable/buttonbackground"
+            android:src="@drawable/deletebutton" />
 
     </RelativeLayout>
     <GridView

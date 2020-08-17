@@ -70,8 +70,8 @@ public class FolderDBHelper {
     {
         return mDB.delete(FolderDB.CreateDB._TABLENAME0, "name=?", new String[]{folder.getName()});
     }
-    @RequiresApi(api = Build.VERSION_CODES.O)//성공시 삭제한 수 1리턴
-    public int updateRecord(Folder folder, String lastName)
+    @RequiresApi(api = Build.VERSION_CODES.O)//성공시 제한 수삭 1리턴
+    public int updateRecord(Folder folder, String name)
     {
         ContentValues values = new ContentValues();
         values.put(FolderDB.CreateDB.NAME, folder.getName());
@@ -79,7 +79,7 @@ public class FolderDBHelper {
         values.put(FolderDB.CreateDB.STARTDATE, folder.getStartDate().format(DateTimeFormatter.ISO_DATE));
         values.put(FolderDB.CreateDB.ENDDATE, folder.getEndDate().format(DateTimeFormatter.ISO_DATE));
         values.put(FolderDB.CreateDB.WITHDESCRIPTION, folder.getWithDescription());
-        return mDB.update(FolderDB.CreateDB._TABLENAME0, values, "name=?", new String[] {lastName});
+        return mDB.update(FolderDB.CreateDB._TABLENAME0, values, "name=?", new String[] {name});
     }
     public Cursor findByFolder(Folder folder) {
         String sql="";

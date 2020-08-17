@@ -63,6 +63,12 @@ public class ImageDBHelper {
         values.put(ImageDB.CreateDB.IMAGEURI, uri);
         return mDB.insert(ImageDB.CreateDB._TABLENAME0, null, values);
     }
+    public int updateRecord(Folder folder, String name)
+    {
+        ContentValues values = new ContentValues();
+        values.put(ImageDB.CreateDB.FOLDERNAME, folder.getName());
+        return mDB.update(ImageDB.CreateDB._TABLENAME0, values, "folder_name=?", new String[] {name});
+    }
     public Cursor findByFolder(Folder folder) {
         String sql="";
         sql = "select * from " + ImageDB.CreateDB._TABLENAME0
