@@ -1,21 +1,17 @@
 package com.ulsan.project.Model.Entity;
 
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.Data;
-import lombok.NoArgsConstructor;
+import lombok.*;
 import lombok.experimental.Accessors;
 
-import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
-import javax.persistence.Id;
+import javax.persistence.*;
+import java.util.List;
 
 @NoArgsConstructor
 @AllArgsConstructor
 @Data
 @Entity
 @Builder
+@ToString(exclude = {"orderList","useInfoList"})
 @Accessors(chain=true)
 public class Company {
     @Id
@@ -25,4 +21,10 @@ public class Company {
     private String code;
     private String name;
     private int warnCount;
+
+    @OneToMany(fetch= FetchType.LAZY, mappedBy = "company")
+    private List<Order> orderList;
+
+    @OneToMany(fetch= FetchType.LAZY, mappedBy = "company")
+    private List<UseInfo> useInfoList;
 }

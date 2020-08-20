@@ -1,15 +1,12 @@
 package com.example.test;
 
 import android.Manifest;
-import android.content.ClipData;
 import android.content.Intent;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.MenuItem;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
-import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.fragment.app.Fragment;
 
@@ -65,30 +62,13 @@ public class MainActivity extends AppCompatActivity {
     }
 
     @Override
-    protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
-        super.onActivityResult(requestCode, resultCode, data);
-        imageList=new ArrayList();
-        if(requestCode==1) {
-            if (data == null) {
-
-            } else {
-                if (data.getClipData() == null)
-                    Toast.makeText(this, "다중선택이 불가합니다.", Toast.LENGTH_SHORT).show();
-                else {
-                    ClipData clipData = data.getClipData();
-
-                    Log.i("clipdata", String.valueOf(clipData.getItemCount()));
-                    for(int i=0; i<clipData.getItemCount();i++)
-                    {
-                        imageList.add(String.valueOf(clipData.getItemAt(i).getUri()));
-                    }
-
-                }
-            }
+    protected void onActivityResult(int requestCode, int resultCode, Intent resultIntent) {
+        super.onActivityResult(requestCode, resultCode, resultIntent);
+        if (requestCode == 1 && resultCode ==200) {
+            galleryFragment.setImages(resultIntent.getStringArrayListExtra("checkedImageList"));
         }
-        galleryFragment.setImages(imageList);
-    }
 
+    }
     private void setFragment()
     {
         bottomNavigationView.setSelectedItemId(R.id.homebutton);//첫화면은 홈버튼이 클릭되어있음.

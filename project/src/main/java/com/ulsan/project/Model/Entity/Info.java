@@ -22,4 +22,5 @@ public class Info {//TODO:ENTITY완성
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long Id;
 
+    private String content;
 }

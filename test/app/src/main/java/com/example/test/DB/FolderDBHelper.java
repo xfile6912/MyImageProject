@@ -81,6 +81,17 @@ public class FolderDBHelper {
         values.put(FolderDB.CreateDB.WITHDESCRIPTION, folder.getWithDescription());
         return mDB.update(FolderDB.CreateDB._TABLENAME0, values, "name=?", new String[] {name});
     }
+    public int isValidated(Folder folder)
+    {
+        String sql="";
+        sql = "select * from " + FolderDB.CreateDB._TABLENAME0
+                + " where " + FolderDB.CreateDB.NAME + "='" + folder.getName()+"' LIMIT 1";
+        Cursor cursor = mDB.rawQuery(sql,null);
+        while(cursor.moveToNext()){
+            return 0;//validate
+        }
+        return 1;//invalidate
+    }
     public Cursor findByFolder(Folder folder) {
         String sql="";
     if(folder.getStartDate()!=null && folder.getEndDate()!=null) {

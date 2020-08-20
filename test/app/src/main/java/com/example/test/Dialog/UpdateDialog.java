@@ -163,7 +163,7 @@ public class UpdateDialog implements View.OnClickListener {
                         .endDate(endDate)
                         .withDescription(withText.getText().toString())
                         .build();
-                int check=updateDialogListener.onPositiveClicked(folder);
+                int check=updateDialogListener.onPositiveClicked(folder);//TODO:중복되는 폴더이름에 대한 처리.
                 if(check==1) {
                     Toast.makeText(context, "사진첩이 수정되었습니다.", Toast.LENGTH_SHORT).show();
                     dialog.dismiss();

@@ -1,5 +1,7 @@
 package com.example.test.Fragment;
 
+import android.app.AlertDialog;
+import android.content.DialogInterface;
 import android.database.Cursor;
 import android.os.Build;
 import android.os.Bundle;
@@ -10,6 +12,7 @@ import android.widget.AdapterView;
 import android.widget.GridView;
 import android.widget.ImageButton;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -40,13 +43,38 @@ public class GalleryFragment2 extends Fragment implements View.OnClickListener {
     GalleryFragment3 galleryFragment3;
     ArrayList images;
     ImageButton editButton;
-    ImageButton deleteButton;//구현하기
+    ImageButton deleteButton;//TODO:구현하기
     @RequiresApi(api = Build.VERSION_CODES.O)
     @Nullable
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         viewGroup = (ViewGroup) inflater.inflate(R.layout.gallery2_fragment, container, false);
         setViewGroup();
+        gridView.setOnItemLongClickListener(new AdapterView.OnItemLongClickListener() {
+            @Override
+            public boolean onItemLongClick(final AdapterView<?> adapterView, View view, final int position, long id) {
+                final AlertDialog.Builder deleteDialog=new AlertDialog.Builder(getContext());
+                deleteDialog.setTitle("삭제");
+                deleteDialog.setMessage("삭제하시겠습니까?");
+                deleteDialog.setNegativeButton("아니요", new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialogInterface, int i) {
+                    }
+                });
+                deleteDialog.setPositiveButton("예", new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialogInterface, int i) {
+                        Toast.makeText(getActivity(),"삭제되었습니다.", Toast.LENGTH_SHORT).show();
+                        String image=(String)adapterView.getAdapter().getItem(position);
+                        imageDBHelper.deleteRecord(folder, image);
+                        imageAdapter.setImages(getImagesByFolder(folder));
+                        gridView.setAdapter(imageAdapter);
+                    }
+                });
+                deleteDialog.show();
+                return true;
+            }
+        });
         return viewGroup;
     }
 
@@ -87,21 +115,20 @@ public class GalleryFragment2 extends Fragment implements View.OnClickListener {
                     @RequiresApi(api = Build.VERSION_CODES.O)
                     @Override
                     public int onPositiveClicked(Folder updatedFolder) {
-                        int check = folderDBHelper.updateRecord(updatedFolder, folder.getName());
+                        if(folderDBHelper.isValidated(updatedFolder)==1) {
+                            int check = folderDBHelper.updateRecord(updatedFolder, folder.getName());
 
-                        if (check == 1) {//폴더이름 중복일 때 오류잡기.
-                            imageDBHelper.updateRecord(updatedFolder, folder.getName());
-                    /*Iterator<String> ir = images.iterator();
-                    while (ir.hasNext()) {
-                        imageDBHelper.insertColumn(folder, ir.next());
-                    }
-                    images = new ArrayList();//데이터 베이스에 추가하고 나서 images 초기화.*/
-                            folder = updatedFolder;
-                            nameText.setText(folder.getPlace());
-                            imageAdapter.setImages(images);
-                            gridView.setAdapter(imageAdapter);
+                            if (check == 1) {//TODO:폴더이름 중복일 때 오류잡기.
+                                imageDBHelper.updateRecord(updatedFolder, folder.getName());
+                                folder = updatedFolder;
+                                nameText.setText(folder.getPlace());
+                                imageAdapter.setImages(images);
+                                gridView.setAdapter(imageAdapter);
+                            }
+                            return 1;
                         }
-                        return check;
+                        else
+                            return 0;
                     }
 
                     @Override

@@ -24,4 +24,5 @@ public class Charge {
 
     private String name;
     private int fee;
+    private String kind;
 }

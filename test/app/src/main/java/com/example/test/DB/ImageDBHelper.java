@@ -19,6 +19,9 @@ public class ImageDBHelper {
     private DatabaseHelper mDBHelper;
     private Context mCtx;
 
+    public int deleteRecord(Folder folder, String image) {
+        return mDB.delete(ImageDB.CreateDB._TABLENAME0, "folder_name=? and image_uri=?", new String[]{folder.getName(), image});
+    }
 
 
     private class DatabaseHelper extends SQLiteOpenHelper {
