@@ -74,13 +74,13 @@ public class ImageActivity extends AppCompatActivity {
         if((imageCursor!=null) && imageCursor.moveToFirst()==true)
         {
             int id=imageCursor.getColumnIndex(MediaStore.Images.Media._ID);
-            while(imageCursor.moveToNext())
+            do
             {
                 int realid=imageCursor.getInt(id);
                 Uri uri= ContentUris.withAppendedId(MediaStore.Images.Media.EXTERNAL_CONTENT_URI,realid);
                 imageList.add(String.valueOf(uri));
 
-            }
+            }while(imageCursor.moveToNext());
         }
         imageCursor.close();
 

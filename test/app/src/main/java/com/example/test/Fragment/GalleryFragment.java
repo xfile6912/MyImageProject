@@ -80,6 +80,7 @@ public class GalleryFragment extends Fragment implements View.OnClickListener {
                         Toast.makeText(getActivity(),"삭제되었습니다.", Toast.LENGTH_SHORT).show();
                         Folder folder=(Folder)adapterView.getAdapter().getItem(position);
                         folderDBHelper.deleteRecord(folder);
+                        imageDBHelper.deleteRecord(folder);
                         folderAdapter.setFolders(getFolders());
                         listView.setAdapter(folderAdapter);
                     }

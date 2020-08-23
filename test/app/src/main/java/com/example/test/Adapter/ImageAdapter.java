@@ -59,11 +59,10 @@ public class ImageAdapter extends BaseAdapter {
             String uri=images.get(position);
             imageView.setScaleType(ImageView.ScaleType.CENTER_CROP);
             imageView.setLayoutParams(new GridView.LayoutParams(GridView.LayoutParams.MATCH_PARENT, GridView.LayoutParams.MATCH_PARENT));
-            Glide.with(fragment)
-                    .load(uri)
-                    .override(300)
-                    .into(imageView);
-
+        Glide.with(fragment)
+                .load(uri)
+                .override(300)
+                .into(imageView);
 
 
         return imageView;

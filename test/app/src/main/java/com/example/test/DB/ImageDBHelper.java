@@ -23,6 +23,10 @@ public class ImageDBHelper {
         return mDB.delete(ImageDB.CreateDB._TABLENAME0, "folder_name=? and image_uri=?", new String[]{folder.getName(), image});
     }
 
+    public int deleteRecord(Folder folder) {
+        return mDB.delete(ImageDB.CreateDB._TABLENAME0, "folder_name=?", new String[]{folder.getName()});
+    }
+
 
     private class DatabaseHelper extends SQLiteOpenHelper {
 

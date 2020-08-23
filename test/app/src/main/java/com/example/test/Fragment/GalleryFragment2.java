@@ -1,10 +1,13 @@
 package com.example.test.Fragment;
 
 import android.app.AlertDialog;
+import android.content.ContentResolver;
 import android.content.DialogInterface;
 import android.database.Cursor;
+import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
+import android.os.ParcelFileDescriptor;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -29,6 +32,7 @@ import com.example.test.MainActivity;
 import com.example.test.Model.Folder;
 import com.example.test.R;
 
+import java.io.FileNotFoundException;
 import java.util.ArrayList;
 
 
@@ -67,7 +71,9 @@ public class GalleryFragment2 extends Fragment implements View.OnClickListener {
                         Toast.makeText(getActivity(),"삭제되었습니다.", Toast.LENGTH_SHORT).show();
                         String image=(String)adapterView.getAdapter().getItem(position);
                         imageDBHelper.deleteRecord(folder, image);
-                        imageAdapter.setImages(getImagesByFolder(folder));
+                        images=getImagesByFolder(folder);
+                        imageAdapter.setImages(images);
+
                         gridView.setAdapter(imageAdapter);
                     }
                 });
@@ -78,6 +84,7 @@ public class GalleryFragment2 extends Fragment implements View.OnClickListener {
         return viewGroup;
     }
 
+    @RequiresApi(api = Build.VERSION_CODES.KITKAT)
     public void setViewGroup(){//초기화코드.
         galleryFragment3=new GalleryFragment3();
         gridView= (GridView)viewGroup.findViewById(R.id.gridView);
@@ -140,12 +147,26 @@ public class GalleryFragment2 extends Fragment implements View.OnClickListener {
                 break;
         }
     }
+    @RequiresApi(api = Build.VERSION_CODES.KITKAT)
     public ArrayList getImagesByFolder(Folder folder){
         ArrayList images=new ArrayList();
         Cursor cursor=imageDBHelper.findByFolder(folder);
+        ContentResolver contentResolver=getContext().getContentResolver();
         while(cursor.moveToNext()){
             String image=cursor.getString(cursor.getColumnIndex(ImageDB.CreateDB.IMAGEURI));
-            images.add(image);
+            ParcelFileDescriptor parcelFileDescriptor=null;
+            try {
+                parcelFileDescriptor=contentResolver.openFileDescriptor(Uri.parse(image),"r");
+                images.add(image);
+            } catch (FileNotFoundException e) {
+                imageDBHelper.deleteRecord(folder,image);
+            }finally {
+                try {
+                    parcelFileDescriptor.close();
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
+            }
         }
         return images;
     }
