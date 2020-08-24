@@ -55,8 +55,10 @@ public class FolderAdapter extends BaseAdapter {
     @Override
     public View getView(int position, View convertView, ViewGroup parent) {
         View view= layoutInflater.inflate(R.layout.folderlayout, null);
-
-        String image=imageDBHelper.findRepImage(folders.get(position));
+        String image=folders.get(position).getRepImage();
+        if(image==null) {
+            image = imageDBHelper.findRepImage(folders.get(position));
+        }
         ImageView imageView=(ImageView)view.findViewById(R.id.imageView);
         TextView nameText=(TextView)view.findViewById(R.id.nameText);
         TextView placeText=(TextView)view.findViewById(R.id.placeText);

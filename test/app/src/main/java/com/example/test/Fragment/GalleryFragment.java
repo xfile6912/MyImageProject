@@ -1,10 +1,13 @@
 package com.example.test.Fragment;
 
 import android.app.AlertDialog;
+import android.content.ContentResolver;
 import android.content.DialogInterface;
 import android.database.Cursor;
+import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
+import android.os.ParcelFileDescriptor;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -30,6 +33,7 @@ import com.example.test.MainActivity;
 import com.example.test.Model.Folder;
 import com.example.test.R;
 
+import java.io.FileNotFoundException;
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.Iterator;
@@ -177,6 +181,7 @@ public class GalleryFragment extends Fragment implements View.OnClickListener {
                     .startDate(LocalDate.parse(cursor.getString(cursor.getColumnIndex(FolderDB.CreateDB.STARTDATE))))
                     .endDate(LocalDate.parse(cursor.getString(cursor.getColumnIndex(FolderDB.CreateDB.ENDDATE))))
                     .withDescription(cursor.getString(cursor.getColumnIndex(FolderDB.CreateDB.WITHDESCRIPTION)))
+                    .repImage(cursor.getString(cursor.getColumnIndex(FolderDB.CreateDB.REPIMAGE)))
                     .build();
             folders.add(folder);
         }
@@ -195,7 +200,24 @@ public class GalleryFragment extends Fragment implements View.OnClickListener {
                     .startDate(LocalDate.parse(cursor.getString(cursor.getColumnIndex(FolderDB.CreateDB.STARTDATE))))
                     .endDate(LocalDate.parse(cursor.getString(cursor.getColumnIndex(FolderDB.CreateDB.ENDDATE))))
                     .withDescription(cursor.getString(cursor.getColumnIndex(FolderDB.CreateDB.WITHDESCRIPTION)))
+                    .repImage(cursor.getString(cursor.getColumnIndex(FolderDB.CreateDB.REPIMAGE)))
                     .build();
+            if(folder.getRepImage()!=null) {//대표이미지가 설정되어 있는지 설정되어 있지 않는지 여부. 설정되어 있다면 실제로 있는 이미지인지 확인
+                ContentResolver contentResolver = getContext().getContentResolver();
+                ParcelFileDescriptor parcelFileDescriptor = null;
+                try {
+                    parcelFileDescriptor = contentResolver.openFileDescriptor(Uri.parse(folder.getRepImage()), "r");
+                } catch (FileNotFoundException e) {
+                    folder.setRepImage(null);//대표이미지가 실제로 없는 이미지라면 DB에 반영
+                    folderDBHelper.updateRecord(folder, folder.getName());
+                } finally {
+                    try {
+                        parcelFileDescriptor.close();
+                    } catch (Exception e) {
+                        e.printStackTrace();
+                    }
+                }
+            }
             folders.add(folder);
         }
         cursor.close();

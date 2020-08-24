@@ -17,4 +17,5 @@ public class Folder {
     private LocalDate startDate;
     private LocalDate endDate;
     private String withDescription;
+    private String repImage;
 }

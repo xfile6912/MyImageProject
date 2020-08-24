@@ -63,6 +63,7 @@ public class FolderDBHelper {
         values.put(FolderDB.CreateDB.PLACE, folder.getPlace());
         values.put(FolderDB.CreateDB.STARTDATE, folder.getStartDate().format(DateTimeFormatter.ISO_DATE));
         values.put(FolderDB.CreateDB.ENDDATE, folder.getEndDate().format(DateTimeFormatter.ISO_DATE));
+        values.put(FolderDB.CreateDB.REPIMAGE, folder.getRepImage());
         values.put(FolderDB.CreateDB.WITHDESCRIPTION, folder.getWithDescription());
         return mDB.insert(FolderDB.CreateDB._TABLENAME0, null, values);
     }
@@ -79,6 +80,7 @@ public class FolderDBHelper {
         values.put(FolderDB.CreateDB.STARTDATE, folder.getStartDate().format(DateTimeFormatter.ISO_DATE));
         values.put(FolderDB.CreateDB.ENDDATE, folder.getEndDate().format(DateTimeFormatter.ISO_DATE));
         values.put(FolderDB.CreateDB.WITHDESCRIPTION, folder.getWithDescription());
+        values.put(FolderDB.CreateDB.REPIMAGE, folder.getRepImage());
         return mDB.update(FolderDB.CreateDB._TABLENAME0, values, "name=?", new String[] {name});
     }
     public int isValidated(Folder folder)

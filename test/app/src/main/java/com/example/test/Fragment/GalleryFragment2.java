@@ -57,27 +57,70 @@ public class GalleryFragment2 extends Fragment implements View.OnClickListener {
         gridView.setOnItemLongClickListener(new AdapterView.OnItemLongClickListener() {
             @Override
             public boolean onItemLongClick(final AdapterView<?> adapterView, View view, final int position, long id) {
-                final AlertDialog.Builder deleteDialog=new AlertDialog.Builder(getContext());
-                deleteDialog.setTitle("삭제");
-                deleteDialog.setMessage("삭제하시겠습니까?");
-                deleteDialog.setNegativeButton("아니요", new DialogInterface.OnClickListener() {
+                final CharSequence[] items ={"대표사진으로 설정", "사진 삭제", "취소"};
+                final AlertDialog.Builder selectDialog=new AlertDialog.Builder(getContext());
+                selectDialog.setTitle("작업 선택");
+                selectDialog.setItems(items, new DialogInterface.OnClickListener() {
                     @Override
-                    public void onClick(DialogInterface dialogInterface, int i) {
-                    }
-                });
-                deleteDialog.setPositiveButton("예", new DialogInterface.OnClickListener() {
-                    @Override
-                    public void onClick(DialogInterface dialogInterface, int i) {
-                        Toast.makeText(getActivity(),"삭제되었습니다.", Toast.LENGTH_SHORT).show();
-                        String image=(String)adapterView.getAdapter().getItem(position);
-                        imageDBHelper.deleteRecord(folder, image);
-                        images=getImagesByFolder(folder);
-                        imageAdapter.setImages(images);
+                    public void onClick(DialogInterface dialogInterface, int id) {
+                        if(items[id].equals("대표사진으로 설정"))
+                        {
+                            final AlertDialog.Builder setDialog=new AlertDialog.Builder(getContext());
+                            setDialog.setTitle("설정");
+                            setDialog.setMessage("대표사진으로 설정하시겠습니까?");
+                            setDialog.setNegativeButton("아니요", new DialogInterface.OnClickListener() {
+                                @Override
+                                public void onClick(DialogInterface dialogInterface, int i) {
+                                }
+                            });
+                            setDialog.setPositiveButton("예", new DialogInterface.OnClickListener() {
+                                @Override
+                                public void onClick(DialogInterface dialogInterface, int i) {
+                                    Toast.makeText(getActivity(),"설정되었습니다.", Toast.LENGTH_SHORT).show();
+                                    String image=(String)adapterView.getAdapter().getItem(position);
+                                    folder.setRepImage(image);
+                                    folderDBHelper.updateRecord(folder, folder.getName());
+                                    images=getImagesByFolder(folder);
+                                    imageAdapter.setImages(images);
 
-                        gridView.setAdapter(imageAdapter);
+                                    gridView.setAdapter(imageAdapter);
+                                }
+                            });
+                            setDialog.show();
+                        }
+                        else if(items[id].equals("사진 삭제"))
+                        {
+                            final AlertDialog.Builder deleteDialog=new AlertDialog.Builder(getContext());
+                            deleteDialog.setTitle("삭제");
+                            deleteDialog.setMessage("사진을 삭제하시겠습니까?");
+                            deleteDialog.setNegativeButton("아니요", new DialogInterface.OnClickListener() {
+                                @Override
+                                public void onClick(DialogInterface dialogInterface, int i) {
+                                }
+                            });
+                            deleteDialog.setPositiveButton("예", new DialogInterface.OnClickListener() {
+                                @Override
+                                public void onClick(DialogInterface dialogInterface, int i) {
+                                    Toast.makeText(getActivity(),"삭제되었습니다.", Toast.LENGTH_SHORT).show();
+                                    String image=(String)adapterView.getAdapter().getItem(position);
+                                    imageDBHelper.deleteRecord(folder, image);
+                                    images=getImagesByFolder(folder);
+                                    imageAdapter.setImages(images);
+
+                                    gridView.setAdapter(imageAdapter);
+                                }
+                            });
+                            deleteDialog.show();
+                        }
+                        else if(items[id].equals("취소"))
+                        {
+                        }
+
                     }
                 });
-                deleteDialog.show();
+                selectDialog.show();
+
+
                 return true;
             }
         });
