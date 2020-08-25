@@ -50,9 +50,14 @@ public class ImageActivityAdapter extends BaseAdapter {
             contentView = inflater.inflate(R.layout.imagelayout, parent, false);
         }
         ImageView imageView=(ImageView) contentView.findViewById(R.id.imageView);
-        CheckBox checkBox = (CheckBox) contentView.findViewById(R.id.checkbox);
-
-        ImageCheck imageCheck=images.get(position);
+        final CheckBox checkBox = (CheckBox) contentView.findViewById(R.id.checkbox);
+        final ImageCheck imageCheck=images.get(position);
+        /*checkBox.post(new Runnable() {
+            @Override
+            public void run() {
+                checkBox.setChecked(imageCheck.isChecked());
+            }
+        });*/
         Glide.with(context)
                 .load(imageCheck.getImage())
                 .override(300)
@@ -67,13 +72,9 @@ public class ImageActivityAdapter extends BaseAdapter {
         else
             images.get(position).setChecked(true);
     }
-    public void setImages(ArrayList<String> imageList)
+    public void setImages(ArrayList<ImageCheck> imageList)
     {
-        images=new ArrayList<>();
-        for(String image:imageList)
-        {
-            this.images.add(new ImageCheck(image, false));
-        }
+        images=imageList;
     }
     public ArrayList<ImageCheck> getItems()
     {

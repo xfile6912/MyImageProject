@@ -7,12 +7,14 @@
     android:gravity="center"
     android:orientation="vertical"
     android:background="@color/colorPrimaryDark">
+
+
     <ImageView
         android:id="@+id/splash_icon"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_gravity="center"
-        android:src="@drawable/ic_launcher_foreground">
+        android:src="@drawable/title">
 
     </ImageView>
 </LinearLayout>

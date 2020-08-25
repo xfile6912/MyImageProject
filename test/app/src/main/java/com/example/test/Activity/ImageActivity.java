@@ -21,17 +21,21 @@ import com.example.test.R;
 import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.Iterator;
+import java.util.TreeSet;
 
 public class ImageActivity extends AppCompatActivity {
     private ArrayList imageFolderList;
     private Spinner folderSpinner;
     private GridView gridView;
     private ImageActivityAdapter imageActivityAdapter;
-    private ArrayList<String> imageList;
+    private ArrayList<ImageCheck> totalImageList;
+    private TreeSet<String> pickedImages;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_image);
+        Intent intent=getIntent();
+        pickedImages= (TreeSet<String>) intent.getSerializableExtra("pickedImages");
         setSpinner();
         setGridView();
         gridView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
@@ -43,6 +47,7 @@ public class ImageActivity extends AppCompatActivity {
         folderSpinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
             @Override
             public void onItemSelected(AdapterView<?> adapterView, View view, int i, long l) {
+                updateTreeSet();//spinner에서 앨범폴더가 변경되었을 때
                 if(imageFolderList.get(i).equals("전체사진"))
                 {
                     getAllImages();
@@ -51,6 +56,7 @@ public class ImageActivity extends AppCompatActivity {
                 {
                     getFolderImages((String) imageFolderList.get(i));
                 }
+
             }
 
             @Override
@@ -64,12 +70,12 @@ public class ImageActivity extends AppCompatActivity {
     {
         gridView=(GridView)findViewById(R.id.gridView);
         imageActivityAdapter=new ImageActivityAdapter(this, new ArrayList());
-
+        gridView.setChoiceMode(GridView.CHOICE_MODE_MULTIPLE);
     }
     public void getAllImages()
     {
         String [] projection2 = {MediaStore.Images.Media._ID, MediaStore.Images.ImageColumns.BUCKET_DISPLAY_NAME, MediaStore.Images.Media.DATA};
-        imageList =new ArrayList();
+        totalImageList =new ArrayList();
         Cursor imageCursor = getContentResolver().query(MediaStore.Images.Media.EXTERNAL_CONTENT_URI, projection2,null, null,MediaStore.Images.Media.DATE_ADDED+" desc");
         if((imageCursor!=null) && imageCursor.moveToFirst()==true)
         {
@@ -78,18 +84,28 @@ public class ImageActivity extends AppCompatActivity {
             {
                 int realid=imageCursor.getInt(id);
                 Uri uri= ContentUris.withAppendedId(MediaStore.Images.Media.EXTERNAL_CONTENT_URI,realid);
-                imageList.add(String.valueOf(uri));
+                String stringUri=(String.valueOf(uri));
+                ImageCheck imageCheck=ImageCheck.builder().image(stringUri).checked(pickedImages.contains(stringUri)).build();
+                totalImageList.add(imageCheck);
 
             }while(imageCursor.moveToNext());
         }
         imageCursor.close();
 
-        imageActivityAdapter.setImages(imageList);
+        imageActivityAdapter.setImages(totalImageList);
+
         gridView.setAdapter(imageActivityAdapter);
+        for (int i = 0; i < gridView.getCount(); i++) {
+            if (totalImageList.get(i).isChecked()) {
+                gridView.setItemChecked(i, true);
+            } else {
+                gridView.setItemChecked(i, false);
+            }
+        }
     }
     public void getFolderImages(String folderName){
         String [] projection2 = {MediaStore.Images.Media._ID, MediaStore.Images.ImageColumns.BUCKET_DISPLAY_NAME, MediaStore.Images.Media.DATA};
-        imageList =new ArrayList();
+        totalImageList =new ArrayList();
         Cursor imageCursor = getContentResolver().query(MediaStore.Images.Media.EXTERNAL_CONTENT_URI, projection2,MediaStore.Images.ImageColumns.BUCKET_DISPLAY_NAME +"='"+folderName+"'", null,MediaStore.Images.Media.DATE_ADDED+" desc");
         if((imageCursor!=null) && imageCursor.moveToFirst()==true)
         {
@@ -98,14 +114,22 @@ public class ImageActivity extends AppCompatActivity {
             {
                 int realid=imageCursor.getInt(id);
                 Uri uri= ContentUris.withAppendedId(MediaStore.Images.Media.EXTERNAL_CONTENT_URI,realid);
-                imageList.add(String.valueOf(uri));
+                String stringUri=(String.valueOf(uri));
+                ImageCheck imageCheck=ImageCheck.builder().image(stringUri).checked(pickedImages.contains(stringUri)).build();
+                totalImageList.add(imageCheck);
 
             }while(imageCursor.moveToNext());
         }
         imageCursor.close();
-        gridView.setChoiceMode(GridView.CHOICE_MODE_MULTIPLE);
-        imageActivityAdapter.setImages(imageList);
+        imageActivityAdapter.setImages(totalImageList);
         gridView.setAdapter(imageActivityAdapter);
+        for (int i = 0; i < gridView.getCount(); i++) {
+            if (totalImageList.get(i).isChecked()) {
+                gridView.setItemChecked(i, true);
+            } else {
+                gridView.setItemChecked(i, false);
+            }
+        }
     }
 
 
@@ -136,16 +160,27 @@ public class ImageActivity extends AppCompatActivity {
         folderSpinner = (Spinner)findViewById(R.id.folderSpinner);
         folderSpinner.setAdapter(new ArrayAdapter<String>(this, android.R.layout.simple_spinner_dropdown_item,imageFolderList));
     }
-
-    public void clickComplete(View view) {
+    public void updateTreeSet(){
         ArrayList<ImageCheck> totalImages=imageActivityAdapter.getItems();
-        ArrayList<String> checkedImageList=new ArrayList<>();
         for(ImageCheck image:totalImages)
         {
-            if(image.isChecked()==true)
+            if(image.isChecked()==true)//폴더 안에 이미지가 check되었으면 pickedImages에 넣어줌.
             {
-                checkedImageList.add(image.getImage());
+                pickedImages.add(image.getImage());
             }
+            else//check가 안되어 있는데 pickedImages안에 있으면 제거해줌.
+            {
+                if(pickedImages.contains(image.getImage()))
+                    pickedImages.remove(image.getImage());
+            }
+        }
+    }
+    public void clickComplete(View view) {
+        updateTreeSet();//완료가 눌렸을때도 반영해주어야 하므로.
+        ArrayList<String> checkedImageList=new ArrayList<>();
+        for(String image:pickedImages)
+        {
+            checkedImageList.add(image);
         }
         Intent resultIntent=new Intent();
         resultIntent.putExtra("checkedImageList", checkedImageList);

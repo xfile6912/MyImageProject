@@ -34,6 +34,7 @@ import com.example.test.R;
 
 import java.io.FileNotFoundException;
 import java.util.ArrayList;
+import java.util.Iterator;
 
 
 public class GalleryFragment2 extends Fragment implements View.OnClickListener {
@@ -53,6 +54,7 @@ public class GalleryFragment2 extends Fragment implements View.OnClickListener {
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         viewGroup = (ViewGroup) inflater.inflate(R.layout.gallery2_fragment, container, false);
+        ((MainActivity)getContext()).setGalleryFragment2(this);
         setViewGroup();
         gridView.setOnItemLongClickListener(new AdapterView.OnItemLongClickListener() {
             @Override
@@ -165,13 +167,18 @@ public class GalleryFragment2 extends Fragment implements View.OnClickListener {
                     @RequiresApi(api = Build.VERSION_CODES.O)
                     @Override
                     public int onPositiveClicked(Folder updatedFolder) {
-                        if(folderDBHelper.isValidated(updatedFolder)==1) {
+                        if(folderDBHelper.isValidated(updatedFolder)==1 || folder.getName().equals(updatedFolder.getName())) {
                             int check = folderDBHelper.updateRecord(updatedFolder, folder.getName());
 
                             if (check == 1) {//TODO:폴더이름 중복일 때 오류잡기.
-                                imageDBHelper.updateRecord(updatedFolder, folder.getName());
+                                imageDBHelper.deleteRecord(folder);//다 삭제후
                                 folder = updatedFolder;
                                 nameText.setText(folder.getPlace());
+                                Iterator<String> ir = images.iterator();
+                                while (ir.hasNext()) {
+                                    imageDBHelper.insertColumn(folder, ir.next());//새로운 폴더에 이미지 교체.
+                                }
+                                images=getImagesByFolder(folder);
                                 imageAdapter.setImages(images);
                                 gridView.setAdapter(imageAdapter);
                             }
@@ -186,7 +193,7 @@ public class GalleryFragment2 extends Fragment implements View.OnClickListener {
                     }
 
                 });
-                updateDialog.callDialog();
+                updateDialog.callDialog(images);
                 break;
         }
     }
@@ -213,13 +220,17 @@ public class GalleryFragment2 extends Fragment implements View.OnClickListener {
         }
         return images;
     }
-
+    public void setImages(ArrayList images)
+    {
+        this.images=images;
+    }
     public void setFolder(Folder folder) {
         this.folder = folder;
     }
     @Override
     public void onDestroy() {
         imageDBHelper.close();
+
         super.onDestroy();
     }
 }

@@ -12,6 +12,7 @@ import androidx.fragment.app.Fragment;
 
 import com.example.test.Fragment.CommunityFragment;
 import com.example.test.Fragment.GalleryFragment;
+import com.example.test.Fragment.GalleryFragment2;
 import com.example.test.Fragment.HomeFragment;
 import com.example.test.Fragment.MenuFragment;
 import com.example.test.Fragment.SettingFragment;
@@ -29,6 +30,8 @@ public class MainActivity extends AppCompatActivity {
     MenuFragment menuFragment;
     SettingFragment settingFragment;
     ArrayList imageList;
+    public GalleryFragment2 galleryFragment2;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -67,7 +70,9 @@ public class MainActivity extends AppCompatActivity {
         if (requestCode == 1 && resultCode ==200) {
             galleryFragment.setImages(resultIntent.getStringArrayListExtra("checkedImageList"));
         }
-
+        if (requestCode == 2 && resultCode ==200) {
+            galleryFragment2.setImages(resultIntent.getStringArrayListExtra("checkedImageList"));
+        }
     }
     private void setFragment()
     {
@@ -131,5 +136,9 @@ public class MainActivity extends AppCompatActivity {
                 .replace(R.id.main_layout,fragment)
                 .addToBackStack(null)
                 .commitAllowingStateLoss();
+    }
+
+    public void setGalleryFragment2(GalleryFragment2 galleryFragment2) {
+        this.galleryFragment2=galleryFragment2;
     }
 }

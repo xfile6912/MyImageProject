@@ -22,6 +22,7 @@ import com.example.test.R;
 
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
+import java.util.TreeSet;
 
 public class AddDialog implements View.OnClickListener {
     private Context context;
@@ -177,6 +178,7 @@ public class AddDialog implements View.OnClickListener {
     private void getPicturesFromAlbum() {
 
         Intent intent=new Intent(context, ImageActivity.class);
+        intent.putExtra("pickedImages", new TreeSet<String>());
         ((MainActivity)context).startActivityForResult(intent, 1);
     }
 }

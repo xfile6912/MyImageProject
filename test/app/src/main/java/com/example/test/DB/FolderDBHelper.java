@@ -90,9 +90,9 @@ public class FolderDBHelper {
                 + " where " + FolderDB.CreateDB.NAME + "='" + folder.getName()+"' LIMIT 1";
         Cursor cursor = mDB.rawQuery(sql,null);
         while(cursor.moveToNext()){
-            return 0;//validate
+            return 0;//update 불가 invalidate
         }
-        return 1;//invalidate
+        return 1;//update 가능 validate
     }
     public Cursor findByFolder(Folder folder) {
         String sql="";

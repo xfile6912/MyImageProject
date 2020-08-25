@@ -5,7 +5,6 @@ import android.app.Dialog;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Build;
-import android.provider.MediaStore;
 import android.view.View;
 import android.view.Window;
 import android.widget.Button;
@@ -16,15 +15,20 @@ import android.widget.Toast;
 
 import androidx.annotation.RequiresApi;
 
+import com.example.test.Activity.ImageActivity;
 import com.example.test.MainActivity;
 import com.example.test.Model.Folder;
 import com.example.test.R;
 
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
+import java.util.ArrayList;
+import java.util.TreeSet;
 
 public class UpdateDialog implements View.OnClickListener {
     private Folder folder;
+    private TreeSet<String> pickedImages;
+    private ArrayList<String> images;
     private Context context;
     private Dialog dialog;
     private EditText nameText, placeText, withText;
@@ -43,8 +47,9 @@ public class UpdateDialog implements View.OnClickListener {
     }
 
     @RequiresApi(api = Build.VERSION_CODES.O)
-    public void callDialog()
+    public void callDialog(ArrayList<String> images)
     {
+        this.images=images;
         dialog=new Dialog(context);
         dialog.requestWindowFeature(Window.FEATURE_NO_TITLE);//타이틀 바 숨김
         dialog.setContentView(R.layout.update_dialog);
@@ -173,19 +178,25 @@ public class UpdateDialog implements View.OnClickListener {
                     Toast.makeText(context, "중복되는 폴더이름이 있습니다.", Toast.LENGTH_SHORT).show();
                 }
                 break;
-            case R.id.addImageButton:
+            case R.id.editImageButton:
                 getPicturesFromAlbum();
                 break;
 
         }
     }
-
+    public TreeSet<String> getListToTreeSet(ArrayList<String> list){
+        TreeSet<String> treeSet=new TreeSet<>();
+        for(String str:list)
+        {
+            treeSet.add(str);
+        }
+        return treeSet;
+    }
     private void getPicturesFromAlbum() {
-        Intent intent=new Intent(Intent.ACTION_PICK);
-        intent.setType(android.provider.MediaStore.Images.Media.CONTENT_TYPE);
-        intent.putExtra(Intent.EXTRA_ALLOW_MULTIPLE, true);
-        intent.setData(MediaStore.Images.Media.EXTERNAL_CONTENT_URI);
-        ((MainActivity)context).startActivityForResult(Intent.createChooser(intent, "Get Album"), 1);
+
+        Intent intent=new Intent(context, ImageActivity.class);
+        intent.putExtra("pickedImages", getListToTreeSet(images));
+        ((MainActivity)context).startActivityForResult(intent, 2);
     }
 }
 //com.example.test.MainActivity@af4314a
