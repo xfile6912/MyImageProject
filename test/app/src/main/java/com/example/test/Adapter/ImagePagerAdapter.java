@@ -4,7 +4,6 @@ import android.content.Context;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.ImageView;
 
 import androidx.annotation.NonNull;
 import androidx.viewpager.widget.PagerAdapter;
@@ -35,6 +34,7 @@ public class ImagePagerAdapter extends PagerAdapter {
         PhotoView imageView = view.findViewById(R.id.imageView);
         Glide.with(context)
                 .load(imageList.get(position))
+                .error(R.drawable.icon_main)
                 .into(imageView);
 
         container.addView(view);

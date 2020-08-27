@@ -1,5 +1,6 @@
 package com.example.test.Model;
 
+import java.io.Serializable;
 import java.time.LocalDate;
 
 import lombok.AllArgsConstructor;
@@ -11,7 +12,7 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 @NoArgsConstructor
 @Builder
-public class Folder {
+public class Folder implements Serializable {
     private String name;
     private String place;
     private LocalDate startDate;

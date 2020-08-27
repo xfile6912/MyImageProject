@@ -3,11 +3,10 @@ package com.example.test.Fragment;
 import android.app.AlertDialog;
 import android.content.ContentResolver;
 import android.content.DialogInterface;
+import android.content.Intent;
 import android.database.Cursor;
-import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
-import android.os.ParcelFileDescriptor;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -22,6 +21,7 @@ import androidx.annotation.Nullable;
 import androidx.annotation.RequiresApi;
 import androidx.fragment.app.Fragment;
 
+import com.example.test.Activity.ImageDeleteActivity;
 import com.example.test.Adapter.ImageAdapter;
 import com.example.test.DB.FolderDBHelper;
 import com.example.test.DB.ImageDB;
@@ -32,7 +32,6 @@ import com.example.test.MainActivity;
 import com.example.test.Model.Folder;
 import com.example.test.R;
 
-import java.io.FileNotFoundException;
 import java.util.ArrayList;
 import java.util.Iterator;
 
@@ -48,7 +47,7 @@ public class GalleryFragment2 extends Fragment implements View.OnClickListener {
     GalleryFragment3 galleryFragment3;
     ArrayList images;
     ImageButton editButton;
-    ImageButton deleteButton;//TODO:구현하기
+    ImageButton deleteButton;
     @RequiresApi(api = Build.VERSION_CODES.O)
     @Nullable
     @Override
@@ -108,7 +107,6 @@ public class GalleryFragment2 extends Fragment implements View.OnClickListener {
                                     imageDBHelper.deleteRecord(folder, image);
                                     images=getImagesByFolder(folder);
                                     imageAdapter.setImages(images);
-
                                     gridView.setAdapter(imageAdapter);
                                 }
                             });
@@ -145,13 +143,13 @@ public class GalleryFragment2 extends Fragment implements View.OnClickListener {
         imageDBHelper=new ImageDBHelper(getContext());
         imageDBHelper.open();
         images=getImagesByFolder(folder);
-        imageAdapter=new ImageAdapter(getActivity(), new ArrayList(), this);
+        imageAdapter=new ImageAdapter(getContext(), new ArrayList(), this);
         imageAdapter.setImages(images);
         gridView.setAdapter(imageAdapter);
         gridView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> adapterView, View view, int position, long id) {
-                galleryFragment3.setImages(images, position);
+                galleryFragment3.setImages(images, position);//viewpager 조작코드.
                 ((MainActivity)getActivity()).replaceFragmentStack(galleryFragment3);
             }
         });
@@ -161,6 +159,12 @@ public class GalleryFragment2 extends Fragment implements View.OnClickListener {
     @Override
     public void onClick(View view) {
         switch (view.getId()) {
+            case R.id.deleteButton:
+                Intent intent=new Intent(getContext(), ImageDeleteActivity.class);
+                intent.putExtra("images", images);
+                intent.putExtra("folder", folder);
+                ((MainActivity)getContext()).startActivityForResult(intent, 3);
+                break;
             case R.id.editButton:
                 UpdateDialog updateDialog = new UpdateDialog(getActivity(), folder);
                 updateDialog.setUpdateDialogListener(new UpdateDialogListener() {
@@ -168,9 +172,10 @@ public class GalleryFragment2 extends Fragment implements View.OnClickListener {
                     @Override
                     public int onPositiveClicked(Folder updatedFolder) {
                         if(folderDBHelper.isValidated(updatedFolder)==1 || folder.getName().equals(updatedFolder.getName())) {
+                            updatedFolder.setRepImage(folder.getRepImage());
                             int check = folderDBHelper.updateRecord(updatedFolder, folder.getName());
 
-                            if (check == 1) {//TODO:폴더이름 중복일 때 오류잡기.
+                            if (check == 1) {
                                 imageDBHelper.deleteRecord(folder);//다 삭제후
                                 folder = updatedFolder;
                                 nameText.setText(folder.getPlace());
@@ -204,23 +209,13 @@ public class GalleryFragment2 extends Fragment implements View.OnClickListener {
         ContentResolver contentResolver=getContext().getContentResolver();
         while(cursor.moveToNext()){
             String image=cursor.getString(cursor.getColumnIndex(ImageDB.CreateDB.IMAGEURI));
-            ParcelFileDescriptor parcelFileDescriptor=null;
-            try {
-                parcelFileDescriptor=contentResolver.openFileDescriptor(Uri.parse(image),"r");
-                images.add(image);
-            } catch (FileNotFoundException e) {
-                imageDBHelper.deleteRecord(folder,image);
-            }finally {
-                try {
-                    parcelFileDescriptor.close();
-                } catch (Exception e) {
-                    e.printStackTrace();
-                }
-            }
+
+           images.add(image);
         }
+
         return images;
     }
-    public void setImages(ArrayList images)
+    public void setUpdatedImages(ArrayList images)
     {
         this.images=images;
     }
@@ -232,5 +227,17 @@ public class GalleryFragment2 extends Fragment implements View.OnClickListener {
         imageDBHelper.close();
 
         super.onDestroy();
+    }
+
+    @RequiresApi(api = Build.VERSION_CODES.KITKAT)
+    public void delete(ArrayList<String> deletedImages) {
+        for(String image:deletedImages)
+        {
+            imageDBHelper.deleteRecord(folder,image);
+        }
+        images=getImagesByFolder(folder);
+        imageAdapter.setImages(images);
+        gridView.setAdapter(imageAdapter);
+
     }
 }

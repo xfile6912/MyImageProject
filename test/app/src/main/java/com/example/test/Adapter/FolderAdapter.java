@@ -68,6 +68,7 @@ public class FolderAdapter extends BaseAdapter {
         imageView.setScaleType(ImageView.ScaleType.CENTER_CROP);
         Glide.with(fragment)
                 .load(image)
+                .error(R.drawable.icon_main)
                 .into(imageView);
         nameText.setText(folders.get(position).getName());
         placeText.setText(folders.get(position).getPlace());

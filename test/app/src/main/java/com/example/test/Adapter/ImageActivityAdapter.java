@@ -5,7 +5,6 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseAdapter;
-import android.widget.CheckBox;
 import android.widget.ImageView;
 
 import com.bumptech.glide.Glide;
@@ -50,17 +49,11 @@ public class ImageActivityAdapter extends BaseAdapter {
             contentView = inflater.inflate(R.layout.imagelayout, parent, false);
         }
         ImageView imageView=(ImageView) contentView.findViewById(R.id.imageView);
-        final CheckBox checkBox = (CheckBox) contentView.findViewById(R.id.checkbox);
         final ImageCheck imageCheck=images.get(position);
-        /*checkBox.post(new Runnable() {
-            @Override
-            public void run() {
-                checkBox.setChecked(imageCheck.isChecked());
-            }
-        });*/
         Glide.with(context)
                 .load(imageCheck.getImage())
                 .override(300)
+                .error(R.drawable.icon_main)
                 .into(imageView);
         return contentView;
     }

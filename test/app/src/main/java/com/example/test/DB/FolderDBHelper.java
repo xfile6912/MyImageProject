@@ -123,7 +123,8 @@ public class FolderDBHelper {
         sql = "select * from " + FolderDB.CreateDB._TABLENAME0
                 + " where " + FolderDB.CreateDB.NAME + " like '%" + folder.getName() + "%' and "
                 + FolderDB.CreateDB.PLACE + " like '%" + folder.getPlace() + "%' and "
-                + FolderDB.CreateDB.WITHDESCRIPTION + " like '%" + folder.getWithDescription() + "%'";
+                + FolderDB.CreateDB.WITHDESCRIPTION + " like '%" + folder.getWithDescription() + "%' order by "
+                +FolderDB.CreateDB.STARTDATE + " desc";
         Cursor cursor = mDB.rawQuery(sql,null);
 
         return cursor;
@@ -133,7 +134,7 @@ public class FolderDBHelper {
     }
     public Cursor findAll() {
 
-        String sql="select * from "+FolderDB.CreateDB._TABLENAME0;
+        String sql="select * from "+FolderDB.CreateDB._TABLENAME0 + " order by " + FolderDB.CreateDB.STARTDATE+ " desc";
         Cursor cursor = mDB.rawQuery(sql,null);
 
         return cursor;
