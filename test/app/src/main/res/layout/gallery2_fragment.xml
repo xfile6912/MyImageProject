@@ -36,7 +36,7 @@
 
             android:layout_toStartOf="@+id/deleteButton"
             android:layout_toLeftOf="@+id/deleteButton"
-            android:background="@drawable/buttonbackground"
+            android:background="@drawable/imagebuttonbackground"
             android:src="@drawable/editbutton" />
 
         <ImageButton
@@ -51,7 +51,7 @@
             android:layout_marginTop="5dp"
             android:layout_marginEnd="11dp"
             android:layout_marginRight="11dp"
-            android:background="@drawable/buttonbackground"
+            android:background="@drawable/imagebuttonbackground"
             android:src="@drawable/deletebutton" />
 
     </RelativeLayout>

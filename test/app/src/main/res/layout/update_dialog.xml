@@ -44,7 +44,7 @@
                 android:layout_marginRight="10dp"
                 android:layout_gravity="center"
                 android:src="@drawable/photo"
-                android:background="@drawable/buttonbackground"/>
+                android:background="@drawable/imagebuttonbackground"/>
         </RelativeLayout>
     <LinearLayout
         android:layout_width="300dp"

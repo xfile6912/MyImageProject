@@ -81,7 +81,7 @@ public class MainActivity extends AppCompatActivity {
     }
     private void setFragment()
     {
-        bottomNavigationView.setSelectedItemId(R.id.homebutton);//첫화면은 홈버튼이 클릭되어있음.
+        bottomNavigationView.setSelectedItemId(R.id.gallerybutton);//첫화면은 홈버튼이 클릭되어있음.
         communityFragment=new CommunityFragment();
         galleryFragment=new GalleryFragment();
         homeFragment=new HomeFragment();
@@ -89,7 +89,7 @@ public class MainActivity extends AppCompatActivity {
         settingFragment=new SettingFragment();
         getSupportFragmentManager()
                 .beginTransaction()
-                .replace(R.id.main_layout,homeFragment)
+                .replace(R.id.main_layout,galleryFragment)
                 .commitAllowingStateLoss();
         bottomNavigationView.setOnNavigationItemSelectedListener(new BottomNavigationView.OnNavigationItemSelectedListener() {
             @Override
@@ -112,11 +112,11 @@ public class MainActivity extends AppCompatActivity {
                         replaceFragment(homeFragment);
                         return true;
                     }
-                    case R.id.menubutton:
+                    /*case R.id.menubutton:
                     {
                         replaceFragment(menuFragment);
                         return true;
-                    }
+                    }*/
                     case R.id.settingbutton:
                     {
                         replaceFragment(settingFragment);

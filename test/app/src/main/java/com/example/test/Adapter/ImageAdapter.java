@@ -45,7 +45,7 @@ public class ImageAdapter extends BaseAdapter {
         if(contentView==null)
         {
             LayoutInflater inflater = (LayoutInflater) context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
-            contentView = inflater.inflate(R.layout.normalimage, parent, false);
+            contentView = inflater.inflate(R.layout.imagelayout, parent, false);
         }
         imageView=(ImageView) contentView.findViewById(R.id.imageView);
             String uri=images.get(position);

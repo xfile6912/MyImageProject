@@ -46,7 +46,7 @@ public class ImageActivityAdapter extends BaseAdapter {
         if(contentView==null)
         {
             LayoutInflater inflater = (LayoutInflater) context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
-            contentView = inflater.inflate(R.layout.imagelayout, parent, false);
+            contentView = inflater.inflate(R.layout.checkedimagelayout, parent, false);
         }
         ImageView imageView=(ImageView) contentView.findViewById(R.id.imageView);
         final ImageCheck imageCheck=images.get(position);

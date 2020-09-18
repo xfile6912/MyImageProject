@@ -1,0 +1,86 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    tools:context=".Activity.LoginActivity"
+    android:gravity="center">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:gravity="center">
+        <LinearLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:layout_margin="60dp">
+
+            <ImageView
+                android:layout_width="80dp"
+                android:layout_height="80dp"
+                android:layout_gravity="center"
+                android:src="@drawable/icon_main" />
+
+            <ImageView
+                android:layout_width="177dp"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                android:layout_marginTop="5dp"
+                android:src="@drawable/title2" />
+        </LinearLayout>
+    <com.google.android.material.textfield.TextInputLayout
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center"
+        android:layout_marginTop="10dp">
+        <EditText
+            android:id="@+id/idText"
+            android:layout_width="300dp"
+            android:layout_height="35dp"
+            android:inputType="text"
+            android:layout_gravity="center"
+            android:textColor="#000000"
+            android:textSize="13dp"
+            android:hint="ID" />
+    </com.google.android.material.textfield.TextInputLayout>
+    <com.google.android.material.textfield.TextInputLayout
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center"
+        android:layout_marginTop="10dp">
+        <EditText
+            android:inputType="textPassword"
+            android:id="@+id/passwordText"
+            android:layout_width="300dp"
+            android:layout_height="35dp"
+            android:layout_gravity="center"
+            android:textColor="#000000"
+            android:textSize="13dp"
+            android:hint="PASSWORD" />
+    </com.google.android.material.textfield.TextInputLayout>
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="50dp"/>
+    <Button
+        android:id="@+id/imageLoginButton"
+        android:layout_gravity="center"
+        android:layout_margin="8dp"
+        android:layout_width="300dp"
+        android:layout_height="35dp"
+        android:text="LOGIN"
+        android:textColor="@color/colorWhite"
+        android:background="@color/colorPrimaryLight"/>
+
+        <TextView
+            android:id="@+id/registerButton"
+            android:layout_marginTop="5dp"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="I'M AGE 회원가입"
+            android:textSize="10dp"
+            android:textStyle="normal"/>
+    </LinearLayout>
+</LinearLayout>

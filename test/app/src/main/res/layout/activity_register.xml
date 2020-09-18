@@ -1,0 +1,178 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    tools:context=".Activity.RegisterActivity">
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="75dp"
+        android:orientation="vertical">
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="left"
+            android:text="회원가입"
+            android:textColor="#000000"
+            android:layout_marginTop="20dp"
+            android:layout_marginLeft="20dp"
+            android:textSize="25dp"
+            />
+    </LinearLayout>
+    <ScrollView
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_gravity="center">
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:orientation="vertical">
+
+            <com.google.android.material.textfield.TextInputLayout
+                    android:id="@+id/idTextLayout"
+                    android:layout_width="match_parent"
+                    android:layout_marginLeft="15dp"
+                    android:layout_marginRight="15dp"
+                    android:layout_marginTop="15dp"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center"
+                    app:errorEnabled="true"
+                    app:helperTextEnabled="true"
+                    app:counterEnabled="true"
+                    app:counterMaxLength="20">
+                <EditText
+                    android:id="@+id/idText"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center"
+                    android:hint="ID"
+                    android:textSize="15dp"
+                    android:padding="10dp"
+                    android:scrollHorizontally="true"
+                    android:singleLine="true"
+                    android:textColorHint="#a9a8a7"
+/>
+                </com.google.android.material.textfield.TextInputLayout>
+            <TextView
+                android:id="@+id/validateText"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="left"
+                android:layout_marginLeft="20dp"
+                android:text=""
+                android:textColor="@color/colorPrimaryDark"
+                android:textSize="12dp" />
+            <com.google.android.material.textfield.TextInputLayout
+                android:id="@+id/passwordTextLayout"
+                android:layout_width="match_parent"
+                android:layout_marginTop="15dp"
+                android:layout_marginLeft="15dp"
+                android:layout_marginRight="15dp"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                app:errorEnabled="true"
+                app:counterEnabled="true"
+                app:counterMaxLength="20">
+            <EditText
+                android:inputType="textPassword"
+                android:id="@+id/passwordText"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:textSize="15dp"
+                android:layout_gravity="center"
+                android:hint="PASSWORD"
+                android:scrollHorizontally="true"
+                android:singleLine="true"
+                android:padding="10dp"
+                android:textColorHint="#a9a8a7" />
+            </com.google.android.material.textfield.TextInputLayout>
+            <com.google.android.material.textfield.TextInputLayout
+                android:id="@+id/confirmPasswordTextLayout"
+                android:layout_width="match_parent"
+                android:layout_marginLeft="15dp"
+                android:layout_marginRight="15dp"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                app:errorEnabled="true"
+                app:counterEnabled="true"
+                app:counterMaxLength="20">
+                <EditText
+                    android:inputType="textPassword"
+                    android:id="@+id/confirmPasswordText"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center"
+                    android:hint="PASSWORD 확인"
+                    android:textSize="15dp"
+                    android:scrollHorizontally="true"
+                    android:singleLine="true"
+                    android:padding="10dp"
+                    android:textColorHint="#a9a8a7"
+                    android:layout_marginTop="5dp" />
+            </com.google.android.material.textfield.TextInputLayout>
+            <com.google.android.material.textfield.TextInputLayout
+                android:id="@+id/emailTextLayout"
+                android:layout_width="match_parent"
+                android:layout_margin="15dp"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                android:layout_marginTop="15dp"
+                app:errorEnabled="true">
+                <EditText
+                    android:id="@+id/emailText"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center"
+                    android:hint="E-mail"
+                    android:textSize="15dp"
+                    android:padding="10dp"
+                    android:scrollHorizontally="true"
+                    android:singleLine="true"
+                    android:textColorHint="#a9a8a7" />
+            </com.google.android.material.textfield.TextInputLayout>
+            <RadioGroup
+                android:layout_height="wrap_content"
+                android:id="@+id/genderGroup"
+                android:layout_width="match_parent"
+                android:layout_margin="15dp"
+                android:orientation="horizontal"
+                android:layout_marginTop="30dp">
+                <RadioButton
+                    android:layout_width="150dp"
+                    android:layout_height="wrap_content"
+                    android:text="남자"
+                    android:id="@+id/male"
+                    android:layout_weight="1"
+                    android:checked="true"/>
+
+                <RadioButton
+                    android:id="@+id/female"
+                    android:layout_width="150dp"
+                    android:layout_height="wrap_content"
+                    android:text="여자"
+                    android:layout_weight="1"
+                    android:checked="false"
+                    />
+            </RadioGroup>
+
+
+
+            <Button
+                android:id="@+id/registerButton"
+                android:layout_width="300dp"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                android:layout_marginTop="30dp"
+                android:background="@color/colorPrimaryLight"
+                android:text="회원가입"
+                android:textColor="#ffffff"
+                android:textSize="20dp"
+                android:textStyle="bold" />
+
+
+        </LinearLayout>
+    </ScrollView>
+</LinearLayout>

@@ -29,7 +29,7 @@ public class UserApiController implements CrudInterface<UserApiRequest,UserApiRe
     }
 
     @GetMapping("")
-    public Header<List<UserApiResponse>> search(@PageableDefault(sort="id", direction = Sort.Direction.ASC, size = 15) Pageable pageable)
+    public Header<List<UserApiResponse>> search(@PageableDefault(sort="id", direction = Sort.Direction.ASC, size = 25) Pageable pageable)
     {
         log.info("{}", pageable);
         return userApiLogicService.search(pageable);

@@ -33,7 +33,7 @@
 
             android:layout_toStartOf="@+id/addButton"
             android:layout_toLeftOf="@+id/addButton"
-            android:background="@drawable/buttonbackground"
+            android:background="@drawable/imagebuttonbackground"
             android:src="@drawable/searchbutton" />
 
         <ImageButton
@@ -48,7 +48,7 @@
             android:layout_marginTop="5dp"
             android:layout_marginEnd="11dp"
             android:layout_marginRight="11dp"
-            android:background="@drawable/buttonbackground"
+            android:background="@drawable/imagebuttonbackground"
             android:src="@drawable/addbutton" />
 
     </RelativeLayout>
