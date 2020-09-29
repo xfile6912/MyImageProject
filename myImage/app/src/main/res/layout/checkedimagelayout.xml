@@ -1,0 +1,29 @@
+<com.example.MyImage.Model.Widget.CheckableCoordinatorLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical">
+
+    <ImageView
+    android:id="@+id/imageView"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:scaleType="centerCrop" />
+
+        <CheckBox
+            android:id="@+id/checkbox"
+            android:layout_width="15dp"
+            android:layout_height="15dp"
+            android:layout_margin="3dp"
+            android:focusable="false"
+            android:focusableInTouchMode="false"
+            android:clickable="false"
+            android:background="@drawable/checkboxbackground"
+            android:button="@android:color/transparent"
+            android:checked="false"
+            app:layout_anchor="@+id/imageView"
+            app:layout_anchorGravity="start|top" />
+
+</com.example.MyImage.Model.Widget.CheckableCoordinatorLayout>
